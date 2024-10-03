@@ -1,32 +1,31 @@
 import React, { useState } from "react";
-import { useTheme } from "next-themes"; // Import the theme hook
+import { useTheme } from "next-themes"; 
+import axios from "axios"; 
+import { useNavigate } from 'react-router-dom'; 
 import Navigationbar from "./Navigationbar";
 import { AcmeLogo } from "./AcmeLogo";
 
 export default function Login() {
-  const { theme } = useTheme(); // Get the current theme
+  const { theme } = useTheme(); 
+  const navigate = useNavigate(); 
 
-  const [email, setEmail] = useState("");
+  // Change email to username to match backend model
+  const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({ userName: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Basic form validation logic
+  // Adjust validation for userName and password
   const validateForm = () => {
     let valid = true;
-    let emailError = "";
+    let userNameError = "";
     let passwordError = "";
 
-    // Email validation
-    if (!email) {
-      emailError = "Email is required";
-      valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      emailError = "Email address is invalid";
+    if (!userName) {
+      userNameError = "Username is required";
       valid = false;
     }
 
-    // Password validation
     if (!password) {
       passwordError = "Password is required";
       valid = false;
@@ -35,20 +34,27 @@ export default function Login() {
       valid = false;
     }
 
-    setErrors({ email: emailError, password: passwordError });
+    setErrors({ userName: userNameError, password: passwordError });
     return valid;
   };
 
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
-      // Simulate an API call
-      setTimeout(() => {
-        console.log("Form submitted", { email, password });
+      try {
+        const response = await axios.post("http://localhost:5001/api/login/login", { 
+          userName, // Use userName instead of email
+          password 
+        });
+
+        console.log("Login successful", response.data);
+        navigate("/dashboard"); // Redirect to dashboard
+      } catch (error) {
+        console.error("Login failed:", error.response ? error.response.data : error.message);
+      } finally {
         setIsSubmitting(false);
-      }, 1000);
+      }
     }
   };
 
@@ -60,14 +66,12 @@ export default function Login() {
       style={{
         backgroundImage:
           theme === "dark"
-            ? "url('/assets/hero-background-dark.jpg')" // Dark mode background
-            : "url('/assets/hero-background-light.jpg')", // Light mode background
+            ? "url('/assets/hero-background-dark.jpg')" 
+            : "url('/assets/hero-background-light.jpg')", 
       }}
     >
-      {/* Dark overlay */}
       <div className="absolute inset-0 opacity-50"></div>
 
-      {/* Form Container */}
       <div
         className={`relative z-20 flex flex-col justify-center items-center px-6 py-12 lg:px-8 ${
           theme === "dark" ? "bg-gray-800 text-white" : "bg-blue-200 text-gray-900"
@@ -77,54 +81,41 @@ export default function Login() {
           <AcmeLogo className="mb-4" />
           
           <h2 className="text-center text-2xl font-bold leading-9 tracking-tight">
-            Create your account
+            Login to your account
           </h2>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* Email Input */}
+          {/* Username Input (formerly Email) */}
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium leading-6"
-            >
-              Email address
+            <label htmlFor="userName" className="block text-sm font-medium leading-6">
+              Username
             </label>
             <div className="mt-2">
               <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="userName"
+                name="userName"
+                type="text"
+                autoComplete="username"
+                value={userName} // use userName state
+                onChange={(e) => setUserName(e.target.value)} // Update userName state
                 className={`block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ${
-                  errors.email
+                  errors.userName
                     ? "ring-red-600 focus:ring-red-600"
                     : "ring-gray-300 focus:ring-indigo-600"
                 } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ${
-                  theme === "dark"
-                    ? "text-white bg-gray-700"
-                    : "text-gray-900 bg-white"
+                  theme === "dark" ? "text-white bg-gray-700" : "text-gray-900 bg-white"
                 }`}
               />
-              {errors.email && (
-                <p className="text-sm text-red-600">{errors.email}</p>
-              )}
+              {errors.userName && <p className="text-sm text-red-600">{errors.userName}</p>}
             </div>
           </div>
 
           {/* Password Input */}
           <div>
-            <div className="flex justify-center">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium leading-6 text-center"
-              >
-                Password
-              </label>
-            </div>
-
+            <label htmlFor="password" className="block text-sm font-medium leading-6 text-center">
+              Password
+            </label>
             <div className="mt-2">
               <input
                 id="password"
@@ -138,14 +129,10 @@ export default function Login() {
                     ? "ring-red-600 focus:ring-red-600"
                     : "ring-gray-300 focus:ring-indigo-600"
                 } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ${
-                  theme === "dark"
-                    ? "text-white bg-gray-700"
-                    : "text-gray-900 bg-white"
+                  theme === "dark" ? "text-white bg-gray-700" : "text-gray-900 bg-white"
                 }`}
               />
-              {errors.password && (
-                <p className="text-sm text-red-600">{errors.password}</p>
-              )}
+              {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
             </div>
           </div>
 
@@ -160,22 +147,15 @@ export default function Login() {
             </button>
           </div>
           <div className="text-sm">
-            <a
-              href="#"
-              className="font-semibold text-indigo-600 hover:text-indigo-500"
-            >
+            <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
               Forgot password?
             </a>
           </div>
         </form>
 
-        {/* Sign up link */}
         <p className="mt-10 text-center text-sm text-gray-500">
           Not a member?{" "}
-          <a
-            href="/signup"
-            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-          >
+          <a href="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
             Register Here!
           </a>
         </p>

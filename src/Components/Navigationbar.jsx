@@ -50,7 +50,7 @@ export default function Navigationbar() {
           <Button
             onClick={toggleTheme}
             className="rounded-full border-none text-white relative p-4"
-            variant="light"
+            variant="ghost"
           >
             {/* Light Mode Image */}
             {theme === "dark" ? (
