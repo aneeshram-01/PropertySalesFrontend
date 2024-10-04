@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { useTheme } from "next-themes"; 
-import axios from "axios"; 
-import { useNavigate } from 'react-router-dom'; 
+import { useTheme } from "next-themes";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import Navigationbar from "./Navigationbar";
 import { AcmeLogo } from "./AcmeLogo";
 
 export default function Login() {
-  const { theme } = useTheme(); 
-  const navigate = useNavigate(); 
+  const { theme } = useTheme();
+  const navigate = useNavigate();
 
   // Change email to username to match backend model
   const [userName, setUserName] = useState("");
@@ -43,15 +43,25 @@ export default function Login() {
     if (validateForm()) {
       setIsSubmitting(true);
       try {
-        const response = await axios.post("http://localhost:5001/api/login/login", { 
-          userName, // Use userName instead of email
-          password 
-        });
+        const response = await axios.post(
+          "http://localhost:5001/api/login/login?userType=Customer",
+          {
+            userName,
+            password,
+          }
+        );
 
         console.log("Login successful", response.data);
         navigate("/dashboard"); // Redirect to dashboard
       } catch (error) {
-        console.error("Login failed:", error.response ? error.response.data : error.message);
+        console.error(
+          "Login failed:",
+          error.response ? error.response.data.Message : error.message
+        );
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          global: "Invalid username or password",
+        }));
       } finally {
         setIsSubmitting(false);
       }
@@ -66,29 +76,35 @@ export default function Login() {
       style={{
         backgroundImage:
           theme === "dark"
-            ? "url('/assets/hero-background-dark.jpg')" 
-            : "url('/assets/hero-background-light.jpg')", 
+            ? "url('/assets/hero-background-dark.jpg')"
+            : "url('/assets/hero-background-light.jpg')",
       }}
     >
       <div className="absolute inset-0 opacity-50"></div>
 
       <div
         className={`relative z-20 flex flex-col justify-center items-center px-6 py-12 lg:px-8 ${
-          theme === "dark" ? "bg-gray-800 text-white" : "bg-blue-200 text-gray-900"
+          theme === "dark"
+            ? "bg-gray-800 text-white"
+            : "bg-blue-200 text-gray-900"
         } p-8 rounded-lg shadow-lg space-y-6`}
       >
         <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center">
           <AcmeLogo className="mb-4" />
-          
+
           <h2 className="text-center text-2xl font-bold leading-9 tracking-tight">
             Login to your account
           </h2>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
+        {errors.global && <p className="text-sm text-red-600">{errors.global}</p>}
           {/* Username Input (formerly Email) */}
           <div>
-            <label htmlFor="userName" className="block text-sm font-medium leading-6">
+            <label
+              htmlFor="userName"
+              className="block text-sm font-medium leading-6"
+            >
               Username
             </label>
             <div className="mt-2">
@@ -104,16 +120,23 @@ export default function Login() {
                     ? "ring-red-600 focus:ring-red-600"
                     : "ring-gray-300 focus:ring-indigo-600"
                 } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ${
-                  theme === "dark" ? "text-white bg-gray-700" : "text-gray-900 bg-white"
+                  theme === "dark"
+                    ? "text-white bg-gray-700"
+                    : "text-gray-900 bg-white"
                 }`}
               />
-              {errors.userName && <p className="text-sm text-red-600">{errors.userName}</p>}
+              {errors.userName && (
+                <p className="text-sm text-red-600">{errors.userName}</p>
+              )}
             </div>
           </div>
 
           {/* Password Input */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium leading-6 text-center">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium leading-6 text-center"
+            >
               Password
             </label>
             <div className="mt-2">
@@ -129,10 +152,14 @@ export default function Login() {
                     ? "ring-red-600 focus:ring-red-600"
                     : "ring-gray-300 focus:ring-indigo-600"
                 } placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ${
-                  theme === "dark" ? "text-white bg-gray-700" : "text-gray-900 bg-white"
+                  theme === "dark"
+                    ? "text-white bg-gray-700"
+                    : "text-gray-900 bg-white"
                 }`}
               />
-              {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
+              {errors.password && (
+                <p className="text-sm text-red-600">{errors.password}</p>
+              )}
             </div>
           </div>
 
@@ -147,7 +174,10 @@ export default function Login() {
             </button>
           </div>
           <div className="text-sm">
-            <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">
+            <a
+              href="#"
+              className="font-semibold text-indigo-600 hover:text-indigo-500"
+            >
               Forgot password?
             </a>
           </div>
@@ -155,7 +185,10 @@ export default function Login() {
 
         <p className="mt-10 text-center text-sm text-gray-500">
           Not a member?{" "}
-          <a href="/signup" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+          <a
+            href="/signup"
+            className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+          >
             Register Here!
           </a>
         </p>

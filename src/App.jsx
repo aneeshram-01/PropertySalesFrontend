@@ -7,11 +7,13 @@ import LandingPage from "./Components/LandingPage";
 import LoginPage from "./Components/LoginPage";
 import SignUpPage from "./Components/SignUpPage";
 import Dashboard from "./Components/Dashboard";
+
 function App() {
   return (
     <>
     <Router>
       <div>
+        
         <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignUpPage />} />

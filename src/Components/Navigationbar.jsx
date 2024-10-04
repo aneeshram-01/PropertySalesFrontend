@@ -1,42 +1,34 @@
-import {
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-  Link,
-  Button,
-} from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@nextui-org/react";
 import { AcmeLogo } from "./AcmeLogo.jsx";
-import { useTheme } from "next-themes"; // Import the useTheme hook from next-themes
+import { useTheme } from "next-themes";
+import { useLocation, useNavigate } from "react-router-dom"; // Import useLocation and useNavigate from react-router-dom
+import { useEffect, useRef } from "react";
 
-export default function Navigationbar() {
-  const { theme, setTheme } = useTheme(); // Destructure theme and setTheme from useTheme
+export default function Navigationbar({ aboutRef }) {
+  const { theme, setTheme } = useTheme();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark"); // Toggle between light and dark mode
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   return (
     <Navbar shouldHideOnScroll position="sticky">
       <NavbarBrand>
         <a href="/">
-        <AcmeLogo className="mr-2"/>
+          <AcmeLogo className="mr-2" />
         </a>
-        <p className="font-bold text-inherit text-sm "><a href="/">PROPERTY SALES</a></p>
+        <p className="font-bold text-inherit text-sm ">
+          <a href="/">PROPERTY SALES</a>
+        </p>
       </NavbarBrand>
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarContent className="hidden sm:flex gap-4" justify="end">
         <NavbarItem isActive>
-          <Link href="/"  aria-current="page">
+          <Link href="/" aria-current="page">
             Home
           </Link>
         </NavbarItem>
-        <NavbarItem>
-          <Link href="#" color="foreground" >
-            About
-          </Link>
-        </NavbarItem>
-      </NavbarContent>
-      <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
           <Link href="/login">Login</Link>
         </NavbarItem>
@@ -45,14 +37,12 @@ export default function Navigationbar() {
             Sign Up
           </Button>
         </NavbarItem>
-        {/* Button for toggling theme */}
-        <NavbarItem >
+        <NavbarItem>
           <Button
             onClick={toggleTheme}
             className="rounded-full border-none text-white relative p-4"
             variant="ghost"
           >
-            {/* Light Mode Image */}
             {theme === "dark" ? (
               <img
                 src="moon.png"
@@ -67,7 +57,6 @@ export default function Navigationbar() {
               />
             )}
 
-            {/* Dark Mode Image */}
             {theme === "dark" ? (
               <img
                 src="sun.png"

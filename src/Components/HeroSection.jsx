@@ -8,7 +8,7 @@ export default function HeroSection() {
   return (
     <section
       className={`relative text-white min-h-screen flex flex-col items-center justify-center ${
-        theme === "dark" ? "bg-gray-800 " : "bg-blue-900"
+        theme === "dark" ? "bg-black " : "bg-white"
       }`} // Conditional background based on theme
       style={{
         backgroundImage: theme === "dark"
@@ -19,7 +19,7 @@ export default function HeroSection() {
       {/* Content container for centered content */}
       <div className="flex flex-col items-center justify-center text-center px-4 space-y-8">
         {/* Text Block */}
-        <div className="flex flex-col items-center justify-center text-center space-y-4 pt-5">
+        <div className={`flex flex-col items-center justify-center text-center space-y-4 pt-5 ${theme === "dark" ? "text-white" : "text-black"}`}>
           <h1 className="text-5xl font-bold mb-4">
             Welcome to ACME Property Sales
           </h1>
