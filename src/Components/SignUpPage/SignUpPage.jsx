@@ -1,7 +1,7 @@
 import React from 'react'
-import Navigationbar from './Navigationbar'
+import Navigationbar from '../CommonComponents/Navigationbar'
 import SignUp from './SignUp'
-import Footer from './Footer'
+import Footer from '../CommonComponents/Footer'
 export default function SignUpPage() {
   return (
     <>

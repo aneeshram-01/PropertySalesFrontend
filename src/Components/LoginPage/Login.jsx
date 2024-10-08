@@ -2,30 +2,31 @@ import React, { useState } from "react";
 import { useTheme } from "next-themes";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import Navigationbar from "./Navigationbar";
-import { AcmeLogo } from "./AcmeLogo";
-
+import Navigationbar from "../CommonComponents/Navigationbar";
+import { AcmeLogo } from "../CommonComponents/AcmeLogo";
+ 
 export default function Login() {
   const { theme } = useTheme();
   const navigate = useNavigate();
-
-  // Change email to username to match backend model
+ 
+  // State variables
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState("Customer"); // New state to toggle between Customer and Broker
   const [errors, setErrors] = useState({ userName: "", password: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+ 
   // Adjust validation for userName and password
   const validateForm = () => {
     let valid = true;
     let userNameError = "";
     let passwordError = "";
-
+ 
     if (!userName) {
       userNameError = "Username is required";
       valid = false;
     }
-
+ 
     if (!password) {
       passwordError = "Password is required";
       valid = false;
@@ -33,26 +34,30 @@ export default function Login() {
       passwordError = "Password must be at least 6 characters long";
       valid = false;
     }
-
+ 
     setErrors({ userName: userNameError, password: passwordError });
     return valid;
   };
-
+ 
+  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
       try {
-        const response = await axios.post(
-          "http://localhost:5001/api/login/login?userType=Customer",
-          {
-            userName,
-            password,
-          }
-        );
-
+        // Set the endpoint dynamically based on userType
+        const endpoint =
+          userType === "Customer"
+            ? "http://localhost:5176/api/Login/LoginUser"
+            : "http://localhost:5176/api/Login/LoginBroker";
+ 
+        const response = await axios.post(endpoint, {
+          userName,
+          password,
+        });
+ 
         console.log("Login successful", response.data);
-        navigate("/dashboard"); // Redirect to dashboard
+        navigate("/dashboard"); // Redirect to dashboard on success
       } catch (error) {
         console.error(
           "Login failed:",
@@ -67,7 +72,7 @@ export default function Login() {
       }
     }
   };
-
+ 
   return (
     <div
       className={`min-h-screen bg-cover bg-center relative flex flex-col justify-center items-center ${
@@ -81,7 +86,7 @@ export default function Login() {
       }}
     >
       <div className="absolute inset-0 opacity-50"></div>
-
+ 
       <div
         className={`relative z-20 flex flex-col justify-center items-center px-6 py-12 lg:px-8 ${
           theme === "dark"
@@ -91,15 +96,40 @@ export default function Login() {
       >
         <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-col items-center">
           <AcmeLogo className="mb-4" />
-
+ 
           <h2 className="text-center text-2xl font-bold leading-9 tracking-tight">
             Login to your account
           </h2>
         </div>
-
+ 
         <form className="space-y-6" onSubmit={handleSubmit}>
-        {errors.global && <p className="text-sm text-red-600">{errors.global}</p>}
-          {/* Username Input (formerly Email) */}
+          {errors.global && (
+            <p className="text-sm text-red-600">{errors.global}</p>
+          )}
+ 
+          {/* User Type Selection */}
+          <div className="flex justify-between">
+            <label>
+              <input
+                type="radio"
+                value="Customer"
+                checked={userType === "Customer"}
+                onChange={() => setUserType("Customer")}
+              />
+              Customer
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="Broker"
+                checked={userType === "Broker"}
+                onChange={() => setUserType("Broker")}
+              />
+              Broker
+            </label>
+          </div>
+ 
+          {/* Username Input */}
           <div>
             <label
               htmlFor="userName"
@@ -113,8 +143,8 @@ export default function Login() {
                 name="userName"
                 type="text"
                 autoComplete="username"
-                value={userName} // use userName state
-                onChange={(e) => setUserName(e.target.value)} // Update userName state
+                value={userName}
+                onChange={(e) => setUserName(e.target.value)}
                 className={`block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ${
                   errors.userName
                     ? "ring-red-600 focus:ring-red-600"
@@ -130,12 +160,12 @@ export default function Login() {
               )}
             </div>
           </div>
-
+ 
           {/* Password Input */}
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium leading-6 text-center"
+              className="block text-sm font-medium leading-6"
             >
               Password
             </label>
@@ -162,7 +192,7 @@ export default function Login() {
               )}
             </div>
           </div>
-
+ 
           {/* Submit Button */}
           <div>
             <button
@@ -182,7 +212,7 @@ export default function Login() {
             </a>
           </div>
         </form>
-
+ 
         <p className="mt-10 text-center text-sm text-gray-500">
           Not a member?{" "}
           <a

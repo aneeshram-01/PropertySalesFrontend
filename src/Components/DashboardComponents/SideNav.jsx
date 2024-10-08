@@ -1,0 +1,130 @@
+import React from 'react';
+import { styled, useTheme } from '@mui/material/styles';
+import MuiDrawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
+import ApartmentSharpIcon from '@mui/icons-material/ApartmentSharp';
+import AddLocationAltSharpIcon from '@mui/icons-material/AddLocationAltSharp';
+import PersonSharpIcon from '@mui/icons-material/PersonSharp';
+import SupportAgentSharpIcon from '@mui/icons-material/SupportAgentSharp';
+import { Link } from 'react-router-dom';
+
+const drawerWidth = 240;
+
+const openedMixin = (theme) => ({
+  width: drawerWidth,
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: 'hidden',
+  backgroundColor: theme.palette.mode === 'dark' ? '#444' : '#fff',
+  color: theme.palette.mode === 'dark' ? '#fff' : '#000',
+});
+
+const closedMixin = (theme) => ({
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: 'hidden',
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up('sm')]: {
+    width: `calc(${theme.spacing(8)} + 1px)`,
+  },
+});
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  padding: theme.spacing(0, 1),
+  ...theme.mixins.toolbar,
+}));
+
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+    boxSizing: 'border-box',
+    ...(open && {
+      ...openedMixin(theme),
+      '& .MuiDrawer-paper': openedMixin(theme),
+    }),
+    ...(!open && {
+      ...closedMixin(theme),
+      '& .MuiDrawer-paper': closedMixin(theme),
+    }),
+  }),
+);
+
+const SideNav = ({ open, handleDrawerClose }) => {
+  const theme = useTheme();
+
+  const icons = [
+    <PersonSharpIcon />, // Icon 1
+    <ApartmentSharpIcon />, // Icon 2
+    <AddLocationAltSharpIcon />, // Icon 3
+    <SupportAgentSharpIcon />, // Icon 4
+  ];
+
+  const labels = ['Profile', 'Properties', 'Locations', 'Support'];
+
+  // Define the routes corresponding to each label
+  const routes = ['/dashboard', '/dashboard/properties', '/dashboard/locations', '/dashboard/support'];
+
+  return (
+    <Drawer variant="permanent" open={open}>
+      <DrawerHeader>
+        <IconButton onClick={handleDrawerClose}>
+          {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+        </IconButton>
+      </DrawerHeader>
+      <Divider />
+      <List>
+        {labels.map((text, index) => (
+          <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+            <Link to={routes[index]} style={{ textDecoration: 'none' }}>
+              {/* Wrapping the ListItemButton with Link */}
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                  backgroundColor: theme.palette.mode === 'dark' ? '#555' : '#fff',
+                  color: theme.palette.mode === 'dark' ? '#fff' : '#000',
+                  '&:hover': {
+                    backgroundColor: theme.palette.mode === 'dark' ? '#666' : '#f5f5f5',
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                    color: theme.palette.mode === 'dark' ? '#fff' : '#000',
+                  }}
+                >
+                  {icons[index]}
+                </ListItemIcon>
+                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </Link>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+    </Drawer>
+  );
+};
+
+export default SideNav;

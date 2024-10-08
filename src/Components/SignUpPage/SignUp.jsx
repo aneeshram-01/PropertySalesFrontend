@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useTheme } from "next-themes"; // Import the theme hook
-import Navigationbar from "./Navigationbar";
-import { AcmeLogo } from "./AcmeLogo";
+import { AcmeLogo } from "../CommonComponents/AcmeLogo";
  
 export default function Register() {
   const { theme } = useTheme(); // Get the current theme
@@ -78,6 +77,18 @@ export default function Register() {
     } else {
       formErrors.address = "";
     }
+ 
+    // Contact number validation
+    if (!contactNumber) {
+      formErrors.contactNumber = "Contact number is required";
+      valid = false;
+    } else if (!/^\d{10}$/.test(contactNumber)) {
+      formErrors.contactNumber = "Contact number must be 10 digits";
+      valid = false;
+    } else {
+      formErrors.contactNumber = "";
+    }
+ 
  
     // Contact number validation
     if (!contactNumber) {

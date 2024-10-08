@@ -1,8 +1,15 @@
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@nextui-org/react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Link,
+  Button,
+} from "@nextui-org/react";
 import { AcmeLogo } from "./AcmeLogo.jsx";
 import { useTheme } from "next-themes";
 import { useLocation, useNavigate } from "react-router-dom"; // Import useLocation and useNavigate from react-router-dom
-import { useEffect, useRef } from "react";
+
 
 export default function Navigationbar({ aboutRef }) {
   const { theme, setTheme } = useTheme();
@@ -33,43 +40,28 @@ export default function Navigationbar({ aboutRef }) {
           <Link href="/login">Login</Link>
         </NavbarItem>
         <NavbarItem>
-          <Button as={Link} color="primary" href="/signup" variant="flat">
-            Sign Up
-          </Button>
+          <Link href="/signup">Sign Up</Link>
         </NavbarItem>
         <NavbarItem>
           <Button
             onClick={toggleTheme}
-            className="rounded-full border-none text-white relative p-4"
+            className="rounded-full border-none relative p-4 transition-colors duration-300"
             variant="ghost"
           >
-            {theme === "dark" ? (
-              <img
-                src="moon.png"
-                alt="Light Mode"
-                className="absolute transition-opacity duration-500 opacity-0 w-7 h-7"
-              />
-            ) : (
-              <img
-                src="moon.png"
-                alt="Light Mode"
-                className="absolute transition-opacity duration-500 opacity-100 w-7 h-7"
-              />
-            )}
-
-            {theme === "dark" ? (
-              <img
-                src="sun.png"
-                alt="Dark Mode"
-                className="absolute transition-opacity duration-500 opacity-100 w-8 h-8"
-              />
-            ) : (
-              <img
-                src="sun.png"
-                alt="Dark Mode"
-                className="absolute transition-opacity duration-500 opacity-0 w-8 h-8"
-              />
-            )}
+            <img
+              src="moon.png"
+              alt="Light Mode"
+              className={`absolute transition-opacity duration-500 ${
+                theme === "dark" ? "opacity-0" : "opacity-100"
+              } w-7 h-7`}
+            />
+            <img
+              src="sun.png"
+              alt="Dark Mode"
+              className={`absolute transition-opacity duration-500 ${
+                theme === "dark" ? "opacity-100" : "opacity-0"
+              } w-8 h-8`}
+            />
           </Button>
         </NavbarItem>
       </NavbarContent>

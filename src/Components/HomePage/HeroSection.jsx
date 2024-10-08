@@ -19,11 +19,11 @@ export default function HeroSection() {
       {/* Content container for centered content */}
       <div className="flex flex-col items-center justify-center text-center px-4 space-y-8">
         {/* Text Block */}
-        <div className={`flex flex-col items-center justify-center text-center space-y-4 pt-5 ${theme === "dark" ? "text-white" : "text-black"}`}>
-          <h1 className="text-5xl font-bold mb-4">
+        <div className={`flex flex-col items-center justify-center text-center space-y-4 ${theme === "dark" ? "text-white" : "text-black"} `}>
+          <h1 className="text-5xl font-bold">
             Welcome to ACME Property Sales
           </h1>
-          <p className="text-lg max-w-xl whitespace-pre-wrap">
+          <p className="text-md max-w-xl whitespace-pre-wrap">
             
             Discover the best real estate properties with ACME. 
             Whether you're looking to buy or sell, we are here to help you every step of the way.
@@ -34,16 +34,17 @@ export default function HeroSection() {
         </div>
 
         {/* Map Section */}
-        <div className="w-full max-w-4xl h-80 bg-white rounded-lg overflow-hidden shadow-lg">
+        <div className="w-full max-w-4xl h-80 bg-white rounded-lg overflow-hidden shadow-lg hover:scale-105 duration-700">
           <MapComponent />
         </div>
 
         {/* Button */}
         <div className="pb-5">
         <Button
-          className="rounded-lg px-6 py-3 bg-primary transition-transform duration-300 hover:scale-105 mb-8"
+          className="rounded-lg px-6 py-3 bg-primary transition-colors duration-300 hover:scale-105 mb-8  border-none relative"
           size="lg"
           color="primary"
+          variant="solid"
         >
         <a href="/login">Get Started</a>
         </Button>

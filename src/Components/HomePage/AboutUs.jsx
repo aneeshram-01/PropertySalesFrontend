@@ -1,5 +1,5 @@
 const links = [
-    { name: 'Buy/Sell Property', href: '#' },
+    { name: 'Buy/Sell Property', href: '/login' },
     { name: 'Broker Services', href: '#' },
     { name: 'Meet Our Team', href: '#' },
   ]
