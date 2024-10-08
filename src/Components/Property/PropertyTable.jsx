@@ -1,41 +1,162 @@
-import React from 'react';
-import {
-  Card, CardBody, Image, Stack, Heading, Text, Divider, CardFooter,
-  ButtonGroup, Button
-} from '@chakra-ui/react'; // Assuming Chakra UI is used here
+import React, { useEffect, useState } from "react";
+import { Card, Image } from "@nextui-org/react";
+import PropertyActions from "./PropertyActions.jsx"; // Import the new component
 
-export default function PropertyTable() {
+export default function Admin() {
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
+
+  const statusMapping = {
+    0: "Active",
+    1: "Pending",
+    2: "Sold",
+    3: "Rented",
+  };
+
+  const propertyTypeMapping = {
+    0: "Sale",
+    1: "Rent",
+  };
+
+  const statusColorMapping = {
+    Active: "bg-green-500 text-white",
+    Pending: "bg-yellow-500 text-black",
+    Sold: "bg-red-500 text-white",
+    Rented: "bg-blue-500 text-white",
+  };
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:5176/api/Admin/properties"
+        ); // Adjust URL as needed
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setProperties(data);
+      } catch (error) {
+        setError(error.message);
+        console.error("Error fetching properties:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, []);
+
+  const handleDelete = (propertyId) => {
+    setProperties((prevProperties) =>
+      prevProperties.filter((property) => property.propertyId !== propertyId)
+    );
+  };
+
+  const handleEdit = (propertyId, updatedProperty) => {
+    setProperties((prevProperties) =>
+      prevProperties.map((property) =>
+        property.propertyId === propertyId
+          ? { ...property, ...updatedProperty }
+          : property
+      )
+    );
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   return (
-    <Card maxW='sm'>
-      <CardBody>
-        <Image
-          src='https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80'
-          alt='Green double couch with wooden legs'
-          borderRadius='lg'
-        />
-        <Stack mt='6' spacing='3'>
-          <Heading size='md'>Living room Sofa</Heading>
-          <Text>
-            This sofa is perfect for modern tropical spaces, baroque inspired
-            spaces, earthy toned spaces, and for people who love a chic design
-            with a sprinkle of vintage design.
-          </Text>
-          <Text color='blue.600' fontSize='2xl'>
-            $450
-          </Text>
-        </Stack>
-      </CardBody>
-      <Divider />
-      <CardFooter>
-        <ButtonGroup spacing='2'>
-          <Button variant='solid' colorScheme='blue'>
-            Buy now
-          </Button>
-          <Button variant='ghost' colorScheme='blue'>
-            Add to cart
-          </Button>
-        </ButtonGroup>
-      </CardFooter>
-    </Card>
+    <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+      {properties.length > 0 ? (
+        properties.map(
+          ({
+            propertyId,
+            propertyType,
+            location,
+            pincode,
+            price,
+            description,
+            propertyImages,
+            status,
+          }) => (
+            <a
+              key={propertyId}
+              className="p-8 max-w-lg border border-indigo-300 rounded-2xl hover:shadow-xl hover:shadow-indigo-50 flex flex-col items-center relative"
+              href="#"
+            >
+              {/* Status Label */}
+              <div
+                className={`absolute top-4 right-4 px-3 py-1 text-sm font-semibold rounded-full ${statusColorMapping[statusMapping[status]]}`}
+                style={{ zIndex: 10 }} // Ensure the label is above the image
+              >
+                {statusMapping[status]}
+              </div>
+
+              {/* Image First */}
+              <div className="relative">
+                {propertyImages && propertyImages.length > 0 ? (
+                  <Image
+                    alt="Property"
+                    className="object-cover w-full h-64 rounded-t-xl z-0" // Set z-index to 0 for the image
+                    src={`http://localhost:5176${propertyImages[0].filePath}`}
+                  />
+                ) : (
+                  <div>No Images Available</div>
+                )}
+              </div>
+
+              {/* Card Body */}
+              <div className="mt-4 w-full">
+                {/* Display Sale and Price */}
+                <div className="flex justify-between items-center w-full">
+                  {/* Left-aligned Sale text - bigger than price */}
+                  <div>
+                    {statusMapping[status] === "Active" && (
+                      <p className="text-lg font-bold">
+                        {propertyTypeMapping[propertyType]}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Right-aligned Price */}
+                  <div>
+                    <p className="text-base font-semibold">${price}</p> {/* Slightly smaller than Sale */}
+                  </div>
+                </div>
+
+                {/* Location, Pincode, and Description - All Left aligned */}
+                <div className="text-left">
+                  {/* Ensure left alignment */}
+                  <p className="mt-2 text-lg font-bold">{location}</p> {/* Larger text for location */}
+                  <small className="text-sm text-gray-500">
+                    Pincode: {pincode}
+                  </small>{" "}
+                  {/* Smaller text for pincode */}
+                  <p className="mt-2 text-base text-gray-700">
+                    {description}
+                  </p>{" "}
+                  {/* Bigger than pincode but smaller than location */}
+                </div>
+
+                {/* Property Actions */}
+                <div className="mt-4">
+                  <PropertyActions
+                    propertyId={propertyId}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                  />
+                </div>
+              </div>
+            </a>
+          )
+        )
+      ) : (
+        <div className="text-center text-gray-300 col-span-full">
+          No properties available
+        </div>
+      )}
+    </div>
   );
 }

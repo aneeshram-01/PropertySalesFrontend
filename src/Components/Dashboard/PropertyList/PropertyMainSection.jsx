@@ -13,8 +13,9 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 const MainSection = () => {
   return (
-    <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-      <PropertyTable/>
+    <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 2 }}>
+      <DrawerHeader />
+      <PropertyTable />
     </Box>
   );
 };
