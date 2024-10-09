@@ -19,7 +19,7 @@ function App() {
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/signup" element={<SignUpPage/>} />
         <Route path="/dashboard" element={<ProfileDashboard/>} />
-        <Route path="/dashboard/properties" element={<PropertyDashboard/>} />
+        <Route path="/dashboard/locations" element={<PropertyDashboard/>} />
         <Route path="/" element={<LandingPage />} />
         </Routes>
       </div>

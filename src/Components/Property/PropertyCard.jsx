@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Card, Image } from "@nextui-org/react";
 import PropertyActions from "./PropertyActions.jsx"; // Import the new component
+import { useTheme } from "next-themes"; // Import useTheme
 
 export default function Admin() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
+
+  const { theme } = useTheme(); // Get the current theme
 
   const statusMapping = {
     0: "Active",
@@ -83,7 +86,12 @@ export default function Admin() {
           }) => (
             <a
               key={propertyId}
-              className="p-8 max-w-lg border border-indigo-300 rounded-2xl hover:shadow-xl hover:shadow-indigo-50 flex flex-col items-center relative"
+              className={`p-8 max-w-lg border border-indigo-300 rounded-2xl hover:shadow-xl flex flex-col items-center relative
+                ${
+                  theme === "dark"
+                    ? "bg-gray-700 text-white hover:shadow-white"
+                    : "bg-blue-200 text-black hover:shadow-black"
+                }`} // Change card background and text color based on theme
               href="#"
             >
               {/* Status Label */}
@@ -128,16 +136,13 @@ export default function Admin() {
 
                 {/* Location, Pincode, and Description - All Left aligned */}
                 <div className="text-left">
-                  {/* Ensure left alignment */}
                   <p className="mt-2 text-lg font-bold">{location}</p> {/* Larger text for location */}
-                  <small className="text-sm text-gray-500">
+                  <small className="text-sm">
                     Pincode: {pincode}
-                  </small>{" "}
-                  {/* Smaller text for pincode */}
-                  <p className="mt-2 text-base text-gray-700">
+                  </small>
+                  <p className="mt-2 text-base">
                     {description}
-                  </p>{" "}
-                  {/* Bigger than pincode but smaller than location */}
+                  </p>
                 </div>
 
                 {/* Property Actions */}
