@@ -10,7 +10,8 @@ import { useTheme } from "next-themes";
 import moonIcon from "/moon.png"; 
 import sunIcon from "/sun.png";
 import { AcmeLogo } from "../CommonComponents/AcmeLogo";
-import Box from "@mui/material/Box"; // Import Box component
+import Box from "@mui/material/Box"; 
+import { useNavigate } from "react-router-dom"; // Import useNavigate for routing
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -34,9 +35,22 @@ const AppBar = styled(MuiAppBar, {
 
 const DashNav = ({ open, handleDrawerOpen }) => {
   const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
+
+  
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
+  };
+
+  const handleSignOut = () => {
+    // Clear session token from localStorage (or cookies)
+
+    // Redirect to the home page
+    navigate("/login");
+// Adjust according to your session management
+    localStorage.removeItem("userId");
+    window.location.reload();
   };
 
   return (
@@ -86,6 +100,7 @@ const DashNav = ({ open, handleDrawerOpen }) => {
           <Button
             className="rounded-full border-none relative p-2 ml-1"
             variant="solid"
+            onClick={handleSignOut} // Call the sign out function
             sx={{
               color: "black",
               backgroundColor: "transparent",

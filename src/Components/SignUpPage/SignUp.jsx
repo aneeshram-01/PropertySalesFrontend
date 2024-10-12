@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTheme } from "next-themes"; // Import the theme hook
 import { AcmeLogo } from "../CommonComponents/AcmeLogo";
  
-export default function Register() {
+export default function SignUp() {
   const { theme } = useTheme(); // Get the current theme
  
   const [name, setName] = useState("");
@@ -144,7 +144,7 @@ export default function Register() {
       const payload = {
         name,
         userName: username,
-        adhaarCard: adhar,
+        aadhaarCard: adhar,
         pincode,
         address,
         contactNumber,
@@ -159,7 +159,7 @@ export default function Register() {
           },
           body: JSON.stringify(payload),
         });
- 
+         
         if (response.ok) {
           const data = await response.json();
           console.log("Registration successful:", data);
@@ -250,13 +250,13 @@ export default function Register() {
           {/* Adhar Card Input */}
           <div>
             <label htmlFor="adhar" className="block text-sm font-medium leading-6">
-              Adhar Card
+              Aadhaar Card
             </label>
             <div className="mt-2">
               <input
                 id="adhar"
                 name="adhar"
-                type="text"
+                type="number"
                 value={adhar}
                 onChange={(e) => setAdhar(e.target.value)}
                 className={`block w-full rounded-md border-0 py-1.5 shadow-sm ring-1 ring-inset ${
