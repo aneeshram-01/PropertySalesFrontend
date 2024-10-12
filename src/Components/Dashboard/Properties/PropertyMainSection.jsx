@@ -1,8 +1,7 @@
-// MainSection.jsx
 import React from 'react';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import ProfileCard from "../Profile/ProfileCard";
+import PropertyBuyCard from '../../Property/PropertyBuyCard';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -14,8 +13,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 const MainSection = () => {
   return (
-    <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 4}}>
-      <ProfileCard/>
+    <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 4 }}>
+      <PropertyBuyCard />
     </Box>
   );
 };

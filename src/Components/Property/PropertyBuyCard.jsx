@@ -1,14 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Card, CardHeader, CardBody, Image } from "@nextui-org/react";
-import PropertyActions from "./PropertyActions.jsx"; 
-import { useTheme } from "next-themes"; 
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Image,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+} from "@nextui-org/react";
+import { useTheme } from "next-themes"; // Import useTheme
 
 export default function Admin() {
   const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
+  const [isBuyModalOpen, setIsBuyModalOpen] = useState(false); // State to control Buy modal
+  const [selectedPropertyId, setSelectedPropertyId] = useState(null); // To track selected property ID
+  const [selectedProperty, setSelectedProperty] = useState(null); // To store the selected property details
 
-  const { theme } = useTheme(); 
+  const { theme } = useTheme(); // Get the current theme
 
   const statusMapping = {
     0: "Active",
@@ -33,6 +46,7 @@ export default function Admin() {
     const fetchProperties = async () => {
       try {
         const userId = localStorage.getItem("userId");
+
         if (!userId) {
           setError("User not logged in. Please log in.");
           return;
@@ -40,11 +54,9 @@ export default function Admin() {
         const response = await fetch(
           `http://localhost:5176/api/Property/${userId}`
         );
-
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-
         const data = await response.json();
         setProperties(data);
       } catch (error) {
@@ -58,27 +70,68 @@ export default function Admin() {
     fetchProperties();
   }, []);
 
-  const handleDelete = (propertyId) => {
-    setProperties((prevProperties) =>
-      prevProperties.filter((property) => property.propertyId !== propertyId)
-    );
+  const handleBuyClick = (propertyId) => {
+    const property = properties.find(p => p.propertyId === propertyId);
+    setSelectedProperty(property); // Set the selected property details
+    setSelectedPropertyId(propertyId); // Set the selected property ID
+    setIsBuyModalOpen(true); // Open the modal
   };
 
-  const handleEdit = (propertyId, updatedProperty) => {
-    setProperties((prevProperties) =>
-      prevProperties.map((property) =>
-        property.propertyId === propertyId
-          ? { ...property, ...updatedProperty }
-          : property
-      )
-    );
+  const handlePurchase = async () => {
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      alert("User ID not found. Please log in again.");
+      return;
+    }
+
+    const transactionData = {
+      propertyId: selectedPropertyId, // Using the selected property ID
+      buyerId: parseInt(userId), // Buyer ID from local storage, must be an integer
+      
+      transactionDate: new Date(), // Automatically set the transaction date
+      amount: parseFloat(selectedProperty.price), // Price from selected property, must be a float
+      status: 0, // Set to Pending or as appropriate for your application
+    };
+
+    console.log("Transaction Payload:", transactionData); // Log the payload to inspect it
+
+    try {
+      // Send transaction details to the backend
+      const response = await fetch(
+        "http://localhost:5176/api/Transactions/AddTransaction",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(transactionData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to process the transaction.");
+      }
+
+      // Redirect to payment gateway after successful transaction
+      alert("Transaction successful! Redirecting to payment...");
+      window.location.href = "https://payment-gateway-placeholder.com"; // Change to your actual payment gateway URL
+    } catch (error) {
+      console.error("Error processing the transaction:", error);
+      alert("Failed to complete the purchase. Please try again.");
+    } finally {
+      setIsBuyModalOpen(false); // Close the modal
+    }
   };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    <div
+      className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"
+      style={{ paddingTop: "2px", paddingLeft: "44px", margin: "2px" }}
+    >
       {properties.length > 0 ? (
         properties.map(
           ({
@@ -91,6 +144,7 @@ export default function Admin() {
             propertyImages,
             status,
             amenities,
+            brokerId, // Added brokerId for the selected property
           }) => (
             <Card
               key={propertyId}
@@ -102,7 +156,6 @@ export default function Admin() {
                     : "bg-blue-200 text-black"
                 }`} // Dynamic styles
               bordered
-              
             >
               {/* Card Header */}
               <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
@@ -128,7 +181,6 @@ export default function Admin() {
                 </div>
               </CardHeader>
 
-              {/* Card Body */}
               <CardBody className="py-2">
                 {/* Sale/Rent and Price row */}
                 <div className="flex justify-between items-center">
@@ -156,13 +208,17 @@ export default function Admin() {
                   <p className="mt-2 text-base">{amenities}</p>
                 </div>
 
-                {/* Property Actions */}
-                <div className="mt-4">
-                  <PropertyActions
-                    propertyId={propertyId}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
-                  />
+                {/* Buy Button */}
+                <div className="mt-4 flex justify-center">
+                  <Button
+                    color="primary"
+                    type="submit"
+                    onClick={() => handleBuyClick(propertyId)}
+                    shadow
+                    auto
+                  >
+                    Buy
+                  </Button>
                 </div>
               </CardBody>
             </Card>
@@ -173,6 +229,28 @@ export default function Admin() {
           No properties available
         </div>
       )}
+
+      {/* Modal for Purchase Confirmation */}
+      <Modal isOpen={isBuyModalOpen} onClose={() => setIsBuyModalOpen(false)}>
+        <ModalContent>
+          <ModalHeader>Confirm Purchase</ModalHeader>
+          <ModalBody>
+            <p>Are you sure you want to proceed with the purchase?</p>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              color="danger"
+              variant="bordered"
+              onPress={() => setIsBuyModalOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button color="primary" onPress={handlePurchase}>
+              Confirm Purchase
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 }

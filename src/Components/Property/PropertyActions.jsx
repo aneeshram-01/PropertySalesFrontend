@@ -1,31 +1,51 @@
 import React, { useState } from "react";
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  useDisclosure,
+} from "@nextui-org/react";
 
 export default function PropertyActions({ propertyId, onEdit, onDelete }) {
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const {
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onOpenChange: onEditOpenChange,
+  } = useDisclosure();
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onOpenChange: onDeleteOpenChange,
+  } = useDisclosure();
+
   const [editData, setEditData] = useState({
-    propertyType: '',
-    location: '',
-    pincode: '',
-    price: '',
-    description: '',
-    amenities: '',
-    status: '',
+    propertyType: "",
+    location: "",
+    pincode: "",
+    price: "",
+    description: "",
+    amenities: "",
+    status: "",
   });
 
   const fetchPropertyDetails = async () => {
     try {
-      const response = await fetch(`http://localhost:5176/api/Property/${propertyId}`);
+      const response = await fetch(
+        `http://localhost:5176/api/Property/${propertyId}`
+      );
       if (!response.ok) throw new Error("Failed to fetch property details");
       const data = await response.json();
       setEditData({
-        propertyType: data.propertyType || '',
-        location: data.location || '',
-        pincode: data.pincode || '',
-        price: data.price || '',
-        description: data.description || '',
-        amenities: data.amenities || '',
-        status: data.status || '',
+        propertyType: data.propertyType || "",
+        location: data.location || "",
+        pincode: data.pincode || "",
+        price: data.price || "",
+        description: data.description || "",
+        amenities: data.amenities || "",
+        status: data.status || "",
       });
     } catch (error) {
       console.error("Error fetching property details:", error);
@@ -34,16 +54,24 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
 
   const handleEditClick = async () => {
     await fetchPropertyDetails();
-    onOpenChange(true); // Open the modal
+    onEditOpenChange(true); // Open the edit modal
   };
 
-  const handleDeleteClick = async () => {
+  const handleDeleteClick = () => {
+    onDeleteOpenChange(true); // Open the delete confirmation modal
+  };
+
+  const confirmDelete = async () => {
     try {
-      const response = await fetch(`http://localhost:5176/api/Property/${propertyId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://localhost:5176/api/Property/${propertyId}`,
+        {
+          method: "DELETE",
+        }
+      );
       if (!response.ok) throw new Error("Failed to delete the property");
       onDelete(propertyId);
+      onDeleteOpenChange(false); // Close the delete modal
     } catch (error) {
       console.error("Error deleting property:", error);
     }
@@ -53,15 +81,21 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
     const formDataToSend = new FormData();
     for (const key in editData) {
       if (editData[key] !== "") {
-        formDataToSend.append(key.charAt(0).toUpperCase() + key.slice(1), editData[key]);
+        formDataToSend.append(
+          key.charAt(0).toUpperCase() + key.slice(1),
+          editData[key]
+        );
       }
     }
 
     try {
-      const response = await fetch(`http://localhost:5176/api/Property/${propertyId}`, {
-        method: "PATCH",
-        body: formDataToSend,
-      });
+      const response = await fetch(
+        `http://localhost:5176/api/Property/${propertyId}`,
+        {
+          method: "PATCH",
+          body: formDataToSend,
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -69,7 +103,7 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
       }
 
       onEdit(propertyId, editData);
-      onOpenChange(false); // Close the modal
+      onEditOpenChange(false); // Close the edit modal
       window.location.reload(); // Refresh the page
     } catch (error) {
       console.error("Error editing property:", error);
@@ -84,18 +118,24 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
 
   return (
     <>
+    <div className="flex justify-center">
       {/* Edit Button */}
-      <Button color="primary" onPress={handleEditClick} className="mr-10">
+      <Button color="primary" onPress={handleEditClick} className="mr-2" >
         Edit
       </Button>
 
       {/* Delete Button */}
-      <Button color="danger" onPress={handleDeleteClick} className="ml-10" variant="bordered">
+      <Button
+        color="danger"
+        onPress={handleDeleteClick}
+        className="ml-2"
+        
+      >
         Delete
       </Button>
-
+      </div>
       {/* Modal for editing */}
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal isOpen={isEditOpen} onOpenChange={onEditOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -143,16 +183,37 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
               </ModalBody>
               <ModalFooter>
                 <div className="flex">
-                  <Button color="primary" onPress={handleSaveEdit}>
-                    Save
-                  </Button>
-                  <Button color="danger" variant="bordered" onPress={onClose}>
+                <Button color="danger" variant="bordered" onPress={onClose} className="mr-1">
                     Cancel
                   </Button>
+                  <Button color="primary" onPress={handleSaveEdit} className="ml-1">
+                    Save
+                  </Button>
+                  
                 </div>
               </ModalFooter>
             </>
           )}
+        </ModalContent>
+      </Modal>
+
+      {/* Modal for delete confirmation */}
+      <Modal isOpen={isDeleteOpen} onOpenChange={onDeleteOpenChange}>
+        <ModalContent>
+          <ModalHeader>Delete</ModalHeader>
+          <ModalBody>Are you sure you want to delete this property?</ModalBody>
+          <ModalFooter>
+            <Button
+              color="primary"
+              variant="bordered"
+              onPress={() => onDeleteOpenChange(false)}
+            >
+              Cancel
+            </Button>
+            <Button color="danger" variant="solid" onPress={confirmDelete}>
+              Delete
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
