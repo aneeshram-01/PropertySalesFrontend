@@ -6,24 +6,17 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
   Input,
-  Textarea,
 } from "@nextui-org/react";
-import { useDisclosure } from "@nextui-org/react";
+import { useDisclosure } from "@nextui-org/react"; // Importing useDisclosure for modal handling
 
 export default function PropertyActions({ propertyId, onEdit, onDelete }) {
   const {
     isOpen: isEditOpen,
-    onOpen: onEditOpen,
     onOpenChange: onEditOpenChange,
   } = useDisclosure();
   const {
     isOpen: isDeleteOpen,
-    onOpen: onDeleteOpen,
     onOpenChange: onDeleteOpenChange,
   } = useDisclosure();
 
@@ -34,7 +27,7 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
     price: "",
     description: "",
     amenities: "",
-    status: "",
+    status: "", // Ensure status is part of the state
   });
 
   const fetchPropertyDetails = async () => {
@@ -51,7 +44,7 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
         price: data.price || "",
         description: data.description || "",
         amenities: data.amenities || "",
-        status: data.status || "",
+        status: data.status || "", // Ensure fetched status is used
       });
     } catch (error) {
       console.error("Error fetching property details:", error);
@@ -122,6 +115,7 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
     setEditData((prev) => ({ ...prev, [name]: value }));
   };
 
+
   return (
     <>
       <div className="flex justify-center">
@@ -135,6 +129,7 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
           Delete
         </Button>
       </div>
+
       {/* Modal for editing */}
       <Modal isOpen={isEditOpen} onOpenChange={onEditOpenChange}>
         <ModalContent>
@@ -143,78 +138,34 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
               <ModalHeader>Edit Property</ModalHeader>
               <ModalBody>
                 <Input
-                  type="text"
                   name="location"
                   placeholder="Location"
                   value={editData.location || ""}
                   onChange={handleInputChange}
                   className="mb-2"
-                  required
                 />
                 <Input
-                  type="text"
                   name="pincode"
                   placeholder="Pincode"
                   value={editData.pincode || ""}
                   onChange={handleInputChange}
                   className="mb-2"
-                  required
                 />
                 <Input
-                  type="text"
                   name="price"
                   placeholder="Price"
                   value={editData.price || ""}
                   onChange={handleInputChange}
                   className="mb-2"
-                  required
                 />
-                
-                {/* Updated Description Field with NextUI Textarea */}
-                <Textarea
-                  label="Description"
-                  placeholder="Enter your description"
+                <Input
+                  name="description"
+                  placeholder="Description"
                   value={editData.description || ""}
                   onChange={handleInputChange}
-                  name="description"
                   className="mb-2"
-                  required
                 />
 
-                {/* Dropdown for Status */}
-                <Dropdown>
-                  <DropdownTrigger>
-                    <Button
-                      variant="bordered"
-                      css={{
-                        width: "100%",
-                        height: "40px", // Match height with input fields
-                      }}
-                    >
-                      {editData.status === ""
-                        ? "Select Status"
-                        : editData.status === "0"
-                        ? "Sale"
-                        : "Rent"}
-                    </Button>
-                  </DropdownTrigger>
-                  <DropdownMenu
-                    aria-label="Select Status"
-                    onSelectionChange={(selected) => {
-                      setEditData((prev) => ({ ...prev, status: selected }));
-                    }}
-                  >
-                    <DropdownItem key="disabled" isDisabled>
-                      Select Status
-                    </DropdownItem>
-                    <DropdownItem key="sale" value="0">
-                      Sale
-                    </DropdownItem>
-                    <DropdownItem key="rent" value="1">
-                      Rent
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
               </ModalBody>
               <ModalFooter>
                 <div className="flex">

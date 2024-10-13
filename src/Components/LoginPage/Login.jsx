@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useTheme } from "next-themes"; // Import the theme hook
-import axios from "axios"; // Import axios for API calls
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useTheme } from "next-themes";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { AcmeLogo } from "../CommonComponents/AcmeLogo"; // Ensure this import is correct
 import {
   Card,
@@ -12,12 +12,12 @@ import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
-  DropdownItem,
+  DropdownItem
 } from "@nextui-org/react"; // Importing necessary NextUI components
 
 export default function Login() {
-  const { theme } = useTheme(); // Get the current theme
-  const navigate = useNavigate(); // Initialize navigation
+  const { theme } = useTheme();
+  const navigate = useNavigate();
 
   // State variables
   const [userName, setUserName] = useState("");
@@ -26,7 +26,6 @@ export default function Login() {
   const [errors, setErrors] = useState({ userName: "", password: "", global: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Function to validate form inputs
   const validateForm = () => {
     let valid = true;
     let userNameError = "";
@@ -49,26 +48,23 @@ export default function Login() {
     return valid;
   };
 
-  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
-      setErrors((prevErrors) => ({ ...prevErrors, global: "" })); // Reset global error
+      setErrors((prevErrors) => ({ ...prevErrors, global: "" }));
 
       try {
-        // Determine endpoint based on user type
         const endpoint =
           userType === "Customer"
             ? "http://localhost:5176/api/Login/LoginUser"
             : "http://localhost:5176/api/Login/LoginBroker";
 
-        // Make API call to login
         const response = await axios.post(endpoint, { userName, password });
-        localStorage.setItem('userId', response.data.userId); // Store user ID in local storage
+        localStorage.setItem('userId', response.data.userId);
 
         console.log("Login successful", response.data);
-        navigate("/dashboard"); // Navigate to dashboard on successful login
+        navigate("/dashboard");
       } catch (error) {
         console.error(
           "Login failed:",
@@ -76,10 +72,10 @@ export default function Login() {
         );
         setErrors((prevErrors) => ({
           ...prevErrors,
-          global: "Invalid username or password", // Set global error message
+          global: "Invalid username or password",
         }));
       } finally {
-        setIsSubmitting(false); // Reset submitting state
+        setIsSubmitting(false);
       }
     }
   };
@@ -92,45 +88,45 @@ export default function Login() {
       style={{
         backgroundImage:
           theme === "dark"
-            ? "url('/assets/hero-background-dark.jpg')" // Background image for dark theme
-            : "url('/assets/hero-background-light.jpg')", // Background image for light theme
+            ? "url('/assets/hero-background-dark.jpg')"
+            : "url('/assets/hero-background-light.jpg')",
       }}
     >
       <Card
         className={`w-full max-w-sm shadow-lg rounded-lg hover:shadow-lg hover:transform hover:scale-105 transition-all duration-300 border-2 ${theme === "dark" ? "bg-black text-white border-gray-700" : "bg-white text-gray-900 border-gray-300"}`}
       >
         <CardHeader className="flex flex-col items-center">
-          <AcmeLogo className="mb-4" /> {/* Acme logo component */}
+          <AcmeLogo className="mb-4" /> {/* Ensure this component is correct */}
           <h2 className="text-2xl font-bold">Login to your account</h2>
         </CardHeader>
         <CardBody>
-          {errors.global && <div className="text-red-600">{errors.global}</div>} {/* Global error message */}
+          {errors.global && <div className="text-red-600">{errors.global}</div>}
 
           <form onSubmit={handleSubmit}>
             <Input
               label="Username"
               value={userName}
-              onChange={(e) => setUserName(e.target.value)} // Update username state
-              status={errors.userName ? "error" : "default"} // Set input status based on errors
+              onChange={(e) => setUserName(e.target.value)}
+              status={errors.userName ? "error" : "default"}
               className="mb-4"
             />
-            {errors.userName && <div className="text-red-600">{errors.userName}</div>} {/* Username error message */}
+            {errors.userName && <div className="text-red-600">{errors.userName}</div>}
 
             <Input
               label="Password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} // Update password state
-              status={errors.password ? "error" : "default"} // Set input status based on errors
+              onChange={(e) => setPassword(e.target.value)}
+              status={errors.password ? "error" : "default"}
               className="mb-4"
             />
-            {errors.password && <div className="text-red-600">{errors.password}</div>} {/* Password error message */}
+            {errors.password && <div className="text-red-600">{errors.password}</div>}
 
             {/* NextUI Dropdown for user type selection */}
             <Dropdown>
               <DropdownTrigger>
                 <Button variant="bordered" className="w-full">
-                  {userType || "Select User"} {/* Placeholder text for dropdown */}
+                  {userType || "Select User"} {/* Placeholder text */}
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
@@ -143,11 +139,10 @@ export default function Login() {
             </Dropdown>
 
             <Button type="submit" disabled={isSubmitting} className="w-full mt-4 mb-2">
-              {isSubmitting ? "Signing in..." : "Sign in"} {/* Conditional button text */}
+              {isSubmitting ? "Signing in..." : "Sign in"}
             </Button>
           </form>
 
-          {/* Uncomment the below code to enable forgot password functionality */}
           {/* <div className="text-center mt-4">
             <a href="/forgot-password" className="font-semibold text-indigo-600 hover:text-indigo-500">
               Forgot your password?
