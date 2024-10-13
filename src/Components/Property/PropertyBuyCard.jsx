@@ -52,7 +52,7 @@ export default function Admin() {
           return;
         }
         const response = await fetch(
-          `http://localhost:5176/api/Property/${userId}`
+          `http://localhost:5176/api/property/all`
         );
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -215,8 +215,7 @@ export default function Admin() {
                     <Image
                       alt="Property"
                       className="object-cover w-full h-64 rounded-t-xl z-0"
-                      src={`http://localhost:5176${propertyImages[0].filePath}`}
-                    />
+                      src={`http://localhost:5176/Uploads/${propertyImages[0].filePath.split('\\').pop()}`}             />
                   ) : (
                     <div>No Images Available</div>
                   )}
