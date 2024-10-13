@@ -6,26 +6,27 @@ import { Button } from "@nextui-org/react";
 import { useTheme } from 'next-themes'; // Import useTheme to manage dark/light mode
 
 const ContactUs = () => {
-  const form = useRef();
+  const form = useRef(); // Reference to the form for email sending
   const { theme } = useTheme(); // Get the current theme (dark or light)
 
+  // Function to send email using EmailJS
   const sendEmail = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission behavior
 
     emailjs
       .sendForm(
         'service_2thif8w', 
         'template_v4kveiw', 
         form.current, 
-        import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
+        import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY // Using environment variable for EmailJS public key
       )
       .then(
         () => {
-          console.log('SUCCESS!');
+          console.log('SUCCESS!'); // Log success message
           window.location.reload(); // Refresh page after successful submission
         },
         (error) => {
-          console.log('FAILED...', error.text);
+          console.log('FAILED...', error.text); // Log error message
         }
       );
   };
@@ -84,6 +85,7 @@ const ContactUs = () => {
   );
 };
 
+// Main section for Customer Support
 const CustomerMainSection = () => {
   return (
     <Box component="main" sx={{ flexGrow: 1, p: 3, mt: 4 }}>

@@ -1,14 +1,16 @@
-import { useTheme } from "next-themes"; // Import the hook to get the current theme
-import { Button } from "@nextui-org/react";
-import MapComponent from "./MapComponent";
+// Import necessary libraries and components
+import { useTheme } from "next-themes"; // Hook for managing theme
+import { Button } from "@nextui-org/react"; // Button component from NextUI
+import MapComponent from "./MapComponent"; // Importing MapComponent
 
+// HeroSection component
 export default function HeroSection() {
   const { theme } = useTheme(); // Get the current theme
 
   return (
     <section
       className={`relative text-white min-h-screen flex flex-col items-center justify-center ${
-        theme === "dark" ? "bg-black " : "bg-white"
+        theme === "dark" ? "bg-black" : "bg-white"
       }`} // Conditional background based on theme
       style={{
         backgroundImage: theme === "dark"
@@ -31,24 +33,23 @@ export default function HeroSection() {
           <h2 className="text-xl max-w-xl whitespace-pre-wrap font-bold">
             A connection point for real estate needs.
           </h2>
-         
         </div>
 
         {/* Map Section */}
         <div className="w-full max-w-4xl h-80 bg-white rounded-lg overflow-hidden shadow-lg hover:scale-105 duration-700">
-          <MapComponent />
+          <MapComponent /> {/* Display MapComponent */}
         </div>
 
-        {/* Button */}
+        {/* Button Section */}
         <div className="pb-10">
-        <Button
-          className="rounded-lg px-6 py-3 bg-primary transition-colors duration-300 hover:scale-105 mb-8  border-none relative"
-          size="lg"
-          color="primary"
-          variant="solid"
-        >
-        <a href="/login">Get Started</a>
-        </Button>
+          <Button
+            className="rounded-lg px-6 py-3 bg-primary transition-colors duration-300 hover:scale-105 mb-8 border-none relative"
+            size="lg"
+            color="primary"
+            variant="solid"
+          >
+            <a href="/login">Get Started</a> {/* Link to login page */}
+          </Button>
         </div>
       </div>
     </section>

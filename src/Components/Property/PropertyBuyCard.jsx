@@ -131,7 +131,7 @@ export default function Admin() {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,// Use your key ID here
         amount: order.amount, // Amount in paise
         currency: order.currency,
-        name: 'PropertySales',
+        name: 'Mercurial',
         description: 'Purchase Description',
         order_id: order.id, // Order ID created by Razorpay
         handler: function (response) {
@@ -233,7 +233,7 @@ export default function Admin() {
                   ) : (
                     <div className="w-full" /> // Filler div for spacing
                   )}
-                  <p className="text-base font-semibold">${price}</p>
+                  <p className="text-base font-semibold">Rs.{price}</p>
                 </div>
  
                 {/* Location and Pincode row */}
@@ -251,7 +251,7 @@ export default function Admin() {
                 {/* Buy Button */}
                 <div className="mt-4 flex justify-center">
                   <Button
-                    color="primary"
+                    color="success"
                     type="submit"
                     onClick={() => handleBuyClick(propertyId)}
                     shadow
@@ -280,10 +280,10 @@ export default function Admin() {
             <p>Price: Rs.{selectedProperty?.price}</p>
           </ModalBody>
           <ModalFooter>
-            <Button auto flat onClick={() => setIsBuyModalOpen(false)}>
+            <Button auto flat onClick={() => setIsBuyModalOpen(false)} color="danger" variant="bordered">
               Cancel
             </Button>
-            <Button auto onClick={handlePurchase}>
+            <Button auto onClick={handlePurchase} color="primary">
               Confirm Purchase
             </Button>
           </ModalFooter>

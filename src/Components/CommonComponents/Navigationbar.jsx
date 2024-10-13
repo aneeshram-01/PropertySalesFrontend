@@ -8,14 +8,15 @@ import {
 } from "@nextui-org/react";
 import { AcmeLogo } from "./AcmeLogo.jsx";
 import { useTheme } from "next-themes";
-// import { useLocation, useNavigate } from "react-router-dom"; // Import useLocation and useNavigate from react-router-dom
-
+// Uncomment if using react-router for navigation
+// import { useLocation, useNavigate } from "react-router-dom"; 
 
 export default function Navigationbar({ aboutRef }) {
   const { theme, setTheme } = useTheme();
   // const location = useLocation();
   // const navigate = useNavigate();
 
+  // Function to toggle between dark and light theme
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
   };
@@ -26,11 +27,13 @@ export default function Navigationbar({ aboutRef }) {
         <a href="/">
           <AcmeLogo className="mr-2" />
         </a>
-        <p className="font-bold text-inherit text-sm ">
+        <p className="font-bold text-inherit text-sm">
           <a href="/">MERCURIAL</a>
         </p>
       </NavbarBrand>
+
       <NavbarContent className="hidden sm:flex gap-4" justify="end">
+        {/* Navigation Links */}
         <NavbarItem isActive>
           <Link href="/" aria-current="page">
             Home
@@ -42,11 +45,14 @@ export default function Navigationbar({ aboutRef }) {
         <NavbarItem>
           <Link href="/signup">Sign Up</Link>
         </NavbarItem>
+        
+        {/* Theme Toggle Button */}
         <NavbarItem>
           <Button
             onClick={toggleTheme}
             className="rounded-full border-none relative p-4 transition-colors duration-300"
             variant="ghost"
+            aria-label="Toggle theme" // Added aria-label for accessibility
           >
             <img
               src="moon.png"

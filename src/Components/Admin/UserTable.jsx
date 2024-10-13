@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
- 
+
 // Styled components for the table cells
 const StyledTableCell = styled(TableCell)({
   fontWeight: 'bold',
@@ -10,7 +10,7 @@ const StyledTableCell = styled(TableCell)({
   color: '#424242',
   backgroundColor: '#f5f5f5',
 });
- 
+
 // Styled components for the table rows
 const StyledTableRow = styled(TableRow)({
   '&:nth-of-type(odd)': {
@@ -21,12 +21,12 @@ const StyledTableRow = styled(TableRow)({
     cursor: 'pointer',
   },
 });
- 
-// Button styles
+
+// Styled button with margin
 const StyledButton = styled(Button)({
   marginLeft: '10px',
 });
- 
+
 const UserTable = ({ users }) => {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [editData, setEditData] = useState({
@@ -39,7 +39,7 @@ const UserTable = ({ users }) => {
     pincode: '',
   });
   const { isOpen, onOpenChange } = useDisclosure();
- 
+
   // Fetch user details for editing
   const fetchUserDetails = async (userId) => {
     try {
@@ -59,15 +59,15 @@ const UserTable = ({ users }) => {
       console.error("Error fetching user details:", error);
     }
   };
- 
+
   // Open the edit modal
   const handleEditClick = async (userId) => {
     setSelectedUserId(userId);
     await fetchUserDetails(userId);
     onOpenChange(true); // Open the modal
   };
- 
-  // Save the edited user
+
+  // Save the edited user details
   const handleSaveEdit = async () => {
     const payload = {};
     for (const key in editData) {
@@ -83,12 +83,12 @@ const UserTable = ({ users }) => {
         },
         body: JSON.stringify(payload), // Send the data as JSON
       });
- 
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to edit the user");
       }
- 
+
       onOpenChange(false); // Close the modal
       window.location.reload(); // Refresh the page (optional)
     } catch (error) {
@@ -96,7 +96,7 @@ const UserTable = ({ users }) => {
       alert("An error occurred while saving the user. Please try again.");
     }
   };
- 
+
   // Delete a user
   const handleDeleteClick = async (userId) => {
     try {
@@ -110,13 +110,13 @@ const UserTable = ({ users }) => {
       console.error("Error deleting user:", error);
     }
   };
- 
-  // Handle form input changes
+
+  // Handle input changes in the form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditData((prev) => ({ ...prev, [name]: value }));
   };
- 
+
   return (
     <>
       <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: '12px' }}>
@@ -166,7 +166,7 @@ const UserTable = ({ users }) => {
           </TableBody>
         </Table>
       </TableContainer>
- 
+
       {/* Modal for editing user */}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
@@ -246,5 +246,5 @@ const UserTable = ({ users }) => {
     </>
   );
 };
- 
+
 export default UserTable;

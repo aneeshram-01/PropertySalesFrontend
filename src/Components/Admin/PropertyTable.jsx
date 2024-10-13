@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@nextui-org/react";
- 
+
 // Custom styles for the table cells
-const StyledTableCell = styled(TableCell)( {
+const StyledTableCell = styled(TableCell)({
   fontWeight: 'bold',
   fontSize: '16px',
   color: '#424242',
   backgroundColor: '#f5f5f5',
 });
- 
+
 // Custom styles for table rows
-const StyledTableRow = styled(TableRow)( {
+const StyledTableRow = styled(TableRow)({
   '&:nth-of-type(odd)': {
     backgroundColor: '#f9f9f9',
   },
@@ -21,7 +21,7 @@ const StyledTableRow = styled(TableRow)( {
     cursor: 'pointer',
   },
 });
- 
+
 // Function to map property status
 const mapPropertyStatus = (status) => {
   switch (status) {
@@ -33,12 +33,12 @@ const mapPropertyStatus = (status) => {
       return 'Unknown';
   }
 };
- 
+
 const PropertyTable = () => {
-  const [properties, setProperties] = useState([]);
-  const [error, setError] = useState(null);
-  const { isOpen, onOpenChange } = useDisclosure();
-  const [selectedPropertyId, setSelectedPropertyId] = useState(null);
+  const [properties, setProperties] = useState([]); // State for properties
+  const [error, setError] = useState(null); // State for error handling
+  const { isOpen, onOpenChange } = useDisclosure(); // Modal control
+  const [selectedPropertyId, setSelectedPropertyId] = useState(null); // Selected property for editing
   const [editData, setEditData] = useState({
     location: '',
     pincode: '',
@@ -47,7 +47,7 @@ const PropertyTable = () => {
     amenities: '', // Amenities will be included here
     status: '', // Status remains here
   });
- 
+
   // Fetch properties on initial load
   useEffect(() => {
     const fetchProperties = async () => {
@@ -57,14 +57,14 @@ const PropertyTable = () => {
           throw new Error(`Error fetching properties: ${response.statusText}`);
         }
         const data = await response.json();
-        setProperties(data);
+        setProperties(data); // Update state with fetched properties
       } catch (error) {
-        setError(error.message);
+        setError(error.message); // Update error state
       }
     };
     fetchProperties();
   }, []);
- 
+
   // Fetch property details for editing
   const fetchPropertyDetails = async (propertyId) => {
     try {
@@ -83,14 +83,14 @@ const PropertyTable = () => {
       console.error("Error fetching property details:", error);
     }
   };
- 
+
   // Open the edit modal
   const handleEditClick = async (propertyId) => {
     setSelectedPropertyId(propertyId);
     await fetchPropertyDetails(propertyId);
     onOpenChange(true); // Open the modal
   };
- 
+
   // Save the edited property
   const handleSaveEdit = async () => {
     const formDataToSend = new FormData();
@@ -99,18 +99,18 @@ const PropertyTable = () => {
         formDataToSend.append(key.charAt(0).toUpperCase() + key.slice(1), editData[key]);
       }
     }
- 
+
     try {
       const response = await fetch(`http://localhost:5176/api/Property/${selectedPropertyId}`, {
         method: "PATCH",
         body: formDataToSend,
       });
- 
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to edit the property");
       }
- 
+
       setProperties((prevProperties) =>
         prevProperties.map((property) =>
           property.propertyId === selectedPropertyId ? { ...property, ...editData } : property
@@ -123,7 +123,7 @@ const PropertyTable = () => {
       alert("An error occurred while saving the property. Please try again.");
     }
   };
- 
+
   // Delete a property
   const handleDeleteClick = async (propertyId) => {
     try {
@@ -137,17 +137,17 @@ const PropertyTable = () => {
       console.error("Error deleting property:", error);
     }
   };
- 
+
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditData((prev) => ({ ...prev, [name]: value }));
   };
- 
+
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div>Error: {error}</div>; // Render error message if any
   }
- 
+
   return (
     <>
       <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: '12px' }}>
@@ -195,7 +195,7 @@ const PropertyTable = () => {
           </TableBody>
         </Table>
       </TableContainer>
- 
+
       {/* Modal for editing */}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
@@ -264,5 +264,5 @@ const PropertyTable = () => {
     </>
   );
 };
- 
+
 export default PropertyTable;

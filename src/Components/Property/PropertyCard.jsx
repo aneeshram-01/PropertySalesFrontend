@@ -141,7 +141,7 @@ export default function Admin() {
                     <div className="w-full" /> // Filler div for spacing
                   )}
                   {/* Right-aligned Price */}
-                  <p className="text-base font-semibold">${price}</p>
+                  <p className="text-base font-semibold">Rs.{price}</p>
                 </div>
 
                 {/* Location and Pincode row */}

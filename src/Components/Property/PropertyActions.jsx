@@ -6,8 +6,14 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  useDisclosure,
+  Dropdown,
+  DropdownTrigger,
+  DropdownMenu,
+  DropdownItem,
+  Input,
+  Textarea,
 } from "@nextui-org/react";
+import { useDisclosure } from "@nextui-org/react";
 
 export default function PropertyActions({ propertyId, onEdit, onDelete }) {
   const {
@@ -136,49 +142,79 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
             <>
               <ModalHeader>Edit Property</ModalHeader>
               <ModalBody>
-                <input
+                <Input
                   type="text"
                   name="location"
                   placeholder="Location"
                   value={editData.location || ""}
                   onChange={handleInputChange}
-                  className="w-full p-2 mb-2 border border-gray-300 rounded"
+                  className="mb-2"
+                  required
                 />
-                <input
+                <Input
                   type="text"
                   name="pincode"
                   placeholder="Pincode"
                   value={editData.pincode || ""}
                   onChange={handleInputChange}
-                  className="w-full p-2 mb-2 border border-gray-300 rounded"
+                  className="mb-2"
+                  required
                 />
-                <input
+                <Input
                   type="text"
                   name="price"
                   placeholder="Price"
                   value={editData.price || ""}
                   onChange={handleInputChange}
-                  className="w-full p-2 mb-2 border border-gray-300 rounded"
+                  className="mb-2"
+                  required
                 />
-                <textarea
-                  name="description"
-                  placeholder="Description"
+                
+                {/* Updated Description Field with NextUI Textarea */}
+                <Textarea
+                  label="Description"
+                  placeholder="Enter your description"
                   value={editData.description || ""}
                   onChange={handleInputChange}
-                  className="w-full p-2 mb-2 border border-gray-300 rounded"
+                  name="description"
+                  className="mb-2"
+                  required
                 />
-                <select
-                  name="status"
-                  value={editData.status || ""}
-                  onChange={handleInputChange}
-                  className="w-full p-2 mb-2 border border-gray-300 rounded"
-                >
-                  <option value="" disabled>
-                    Select Status
-                  </option>
-                  <option value={0}>Sale</option>
-                  <option value={1}>Rent</option>
-                </select>
+
+                {/* Dropdown for Status */}
+                <Dropdown>
+                  <DropdownTrigger>
+                    <Button
+                      variant="bordered"
+                      css={{
+                        width: "100%",
+                        height: "40px", // Match height with input fields
+                      }}
+                    >
+                      {editData.status === ""
+                        ? "Select Status"
+                        : editData.status === "0"
+                        ? "Sale"
+                        : "Rent"}
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu
+                    aria-label="Select Status"
+                    onSelectionChange={(selected) => {
+                      setEditData((prev) => ({ ...prev, status: selected }));
+                    }}
+                  >
+                    <DropdownItem key="disabled" isDisabled>
+                      Select Status
+                    </DropdownItem>
+                    <DropdownItem key="sale" value="0">
+                      Sale
+                    </DropdownItem>
+                    <DropdownItem key="rent" value="1">
+                      Rent
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </ModalBody>
               <ModalFooter>
                 <div className="flex">
