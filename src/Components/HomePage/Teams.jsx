@@ -8,7 +8,7 @@ const people = [
   },
   {
     name: 'Darren',
-    role: 'Co-Founder / CEO',
+    role: 'Founder / CEO',
     imageUrl: './Darren.jpeg',
   },
   {

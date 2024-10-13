@@ -76,7 +76,8 @@ export default function PropertyAdd({ isOpen, onClose }) {
   };
 
   return (
-    <Modal
+    
+        <Modal
       isOpen={isOpen}
       onOpenChange={onClose}
       placement="center"
@@ -86,7 +87,7 @@ export default function PropertyAdd({ isOpen, onClose }) {
         justifyContent: "center",
         alignItems: "center",
         height: "200vh",
-        marginTop: "10px",
+        marginTop: "0px",
       }}
     >
       <ModalContent
@@ -109,7 +110,7 @@ export default function PropertyAdd({ isOpen, onClose }) {
           Add Property
         </ModalHeader>
         <ModalBody css={{ marginBottom: "5px", // Reduced margin at the bottom
-    paddingTop: "5px"}}>
+    paddingTop:"20px"}}>
           
             <div
               style={{
@@ -245,5 +246,8 @@ export default function PropertyAdd({ isOpen, onClose }) {
         </ModalFooter>
       </ModalContent>
     </Modal>
+
+        
+    
   );
 }

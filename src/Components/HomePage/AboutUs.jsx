@@ -1,13 +1,13 @@
 const links = [
     { name: 'Buy/Sell Property', href: '/login' },
-    { name: 'Broker Services', href: '#' },
+    { name: 'Broker Services', href: '/login' },
     { name: 'Meet Our Team', href: '#' },
   ]
   const stats = [
-    { name: 'Properties Sold', value: '500+' },
+    { name: 'Properties Sold', value: '250+' },
     { name: 'Registered Brokers', value: '150+' },
-    { name: 'Satisfied Clients', value: '1000+' },
-    { name: 'Years in Business', value: '25' },
+    { name: 'Satisfied Clients', value: '700+' },
+    { name: 'Years in Business', value: '2+' },
   ]
   
   export default function Example() {
@@ -46,7 +46,7 @@ const links = [
           <div className="mx-auto max-w-2xl lg:mx-0">
             <h2 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">About Us</h2>
             <p className="mt-6 text-lg leading-8 text-gray-300">
-              Welcome to our trusted property sales company. With over 25 years of experience, we specialize in connecting
+              Welcome to our trusted property sales company. With over 2 years of experience, we specialize in connecting
               buyers, sellers, and brokers with the best real estate opportunities. Whether you're looking to buy your
               dream home, sell your property at the best price, or grow your brokerage business, we're here to guide you
               every step of the way.
