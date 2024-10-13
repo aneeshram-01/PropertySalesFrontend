@@ -141,22 +141,15 @@ import {
                           height: "40px", // Set height to match other inputs
                         }}
                       >
-                        {propertyType === 0 ? "Sale" : propertyType === 1 ? "Rent" : "Select Property Type"}
+                        {propertyType === 0 ? "Sale" : "Rent"}
                       </Button>
                     </DropdownTrigger>
                     <DropdownMenu
                       aria-label="Select Property Type"
-                      onSelectionChange={(selected) => setPropertyType(Number(selected))}
+                      onAction={(key) => setPropertyType(Number(key))}
                     >
-                      <DropdownItem key="disabled" isDisabled>
-                        Select Property Type
-                      </DropdownItem>
-                      <DropdownItem key="sale" value={0}>
-                        Sale
-                      </DropdownItem>
-                      <DropdownItem key="rent" value={1}>
-                        Rent
-                      </DropdownItem>
+                      <DropdownItem key="0">Sale</DropdownItem>
+                      <DropdownItem key="1">Rent</DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
   
@@ -193,28 +186,25 @@ import {
                           height: "40px", // Set height to match other inputs
                         }}
                       >
-                        {status === 0 ? "Active" : status === 1 ? "Pending" : status === 2 ? "Sold" : status === 3 ? "Rented" : "Select Status"}
+                        {status === 0
+                          ? "Active"
+                          : status === 1
+                          ? "Pending"
+                          : status === 2
+                          ? "Sold"
+                          : status === 3
+                          ? "Rented"
+                          : "Select Status"}
                       </Button>
                     </DropdownTrigger>
                     <DropdownMenu
                       aria-label="Select Status"
-                      onSelectionChange={(selected) => setStatus(Number(selected))}
+                      onAction={(key) => setStatus(Number(key))}
                     >
-                      <DropdownItem key="disabled" isDisabled>
-                        Select Status
-                      </DropdownItem>
-                      <DropdownItem key="active" value={0}>
-                        Active
-                      </DropdownItem>
-                      <DropdownItem key="pending" value={1}>
-                        Pending
-                      </DropdownItem>
-                      <DropdownItem key="sold" value={2}>
-                        Sold
-                      </DropdownItem>
-                      <DropdownItem key="rented" value={3}>
-                        Rented
-                      </DropdownItem>
+                      <DropdownItem key="0">Active</DropdownItem>
+                      <DropdownItem key="1">Pending</DropdownItem>
+                      <DropdownItem key="2">Sold</DropdownItem>
+                      <DropdownItem key="3">Rented</DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
   
@@ -283,18 +273,30 @@ import {
                     />
                   </div>
                 </div>
+                <Button
+                  type="submit"
+                  color="primary"
+                  css={{
+                    marginTop: "20px",
+                    width: "100%",
+                    height: "40px",
+                    borderRadius: "8px",
+                  }}
+                >
+                  Add Property
+                </Button>
+                {message && <p>{message}</p>}
               </form>
             </div>
-  
-            {message && <div className="text-green-500">{message}</div>}
           </ModalBody>
-          <ModalFooter
-            css={{ justifyContent: "space-between", marginTop: "5px" }}
-          >
-            <Button color="primary" type="submit" onClick={handleSubmit}>
-              Add Property
-            </Button>
-            <Button color="danger" variant="bordered" onPress={onClose}>
+          <ModalFooter css={{ justifyContent: "center" }}>
+            <Button
+              auto
+              color="error"
+              flat
+              onClick={onClose}
+              css={{ marginTop: "10px", width: "100%", height: "40px" }}
+            >
               Close
             </Button>
           </ModalFooter>

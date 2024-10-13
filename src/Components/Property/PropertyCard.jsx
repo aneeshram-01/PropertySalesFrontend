@@ -10,6 +10,7 @@ export default function Admin() {
 
   const { theme } = useTheme(); 
 
+  // Status mappings
   const statusMapping = {
     0: "Active",
     1: "Pending",
@@ -17,11 +18,13 @@ export default function Admin() {
     3: "Rented",
   };
 
+  // Property type mappings
   const propertyTypeMapping = {
     0: "Sale",
     1: "Rent",
   };
 
+  // Status color mappings
   const statusColorMapping = {
     Active: "bg-green-500 text-white",
     Pending: "bg-yellow-500 text-black",
@@ -58,17 +61,19 @@ export default function Admin() {
     fetchProperties();
   }, []);
 
+  // Handle deletion of a property
   const handleDelete = (propertyId) => {
     setProperties((prevProperties) =>
       prevProperties.filter((property) => property.propertyId !== propertyId)
     );
   };
 
+  // Handle property edit - update the property details including propertyType
   const handleEdit = (propertyId, updatedProperty) => {
     setProperties((prevProperties) =>
       prevProperties.map((property) =>
         property.propertyId === propertyId
-          ? { ...property, ...updatedProperty }
+          ? { ...property, ...updatedProperty } // Update the edited property
           : property
       )
     );
@@ -96,13 +101,8 @@ export default function Admin() {
               key={propertyId}
               className={`py-4 max-w-lg mx-auto shadow-lg rounded-lg hover:shadow-lg hover:transform hover:scale-105 transition-all duration-300 border-2 
                 ${theme === "dark" ? "border-gray-700" : "border-gray-300"} 
-                ${
-                  theme === "dark"
-                    ? "bg-black text-white"
-                    : "bg-white text-black"
-                }`} // Dynamic styles
+                ${theme === "dark" ? "bg-black text-white" : "bg-white text-black"}`} // Dynamic styles
               bordered
-              
             >
               {/* Card Header */}
               <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
@@ -111,7 +111,7 @@ export default function Admin() {
                   className={`absolute top-4 right-4 px-3 py-1 text-sm font-semibold rounded-full ${statusColorMapping[statusMapping[status]]}`}
                   style={{ zIndex: 10 }}
                 >
-                  {statusMapping[status]}
+                  {statusMapping[status]} {/* Render the status based on mapping */}
                 </div>
 
                 {/* Image occupying half of the card */}
@@ -133,13 +133,9 @@ export default function Admin() {
                 {/* Sale/Rent and Price row */}
                 <div className="flex justify-between items-center">
                   {/* Left-aligned Sale/Rent text */}
-                  {statusMapping[status] === "Active" ? (
-                    <p className="text-lg font-bold">
-                      {propertyTypeMapping[propertyType]}
-                    </p>
-                  ) : (
-                    <div className="w-full" /> // Filler div for spacing
-                  )}
+                  <p className="text-lg font-bold">
+                    {propertyTypeMapping[propertyType]} {/* Correctly display Sale/Rent */}
+                  </p>
                   {/* Right-aligned Price */}
                   <p className="text-base font-semibold">Rs.{price}</p>
                 </div>
@@ -160,8 +156,8 @@ export default function Admin() {
                 <div className="mt-4">
                   <PropertyActions
                     propertyId={propertyId}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
+                    onEdit={handleEdit} // Pass handleEdit function to update the property
+                    onDelete={handleDelete} // Pass handleDelete function to remove the property
                   />
                 </div>
               </CardBody>
