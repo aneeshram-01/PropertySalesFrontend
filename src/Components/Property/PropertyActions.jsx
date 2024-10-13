@@ -8,17 +8,11 @@ import {
   Button,
   Input,
 } from "@nextui-org/react";
-import { useDisclosure } from "@nextui-org/react"; // Importing useDisclosure for modal handling
+import { useDisclosure } from "@nextui-org/react";
 
 export default function PropertyActions({ propertyId, onEdit, onDelete }) {
-  const {
-    isOpen: isEditOpen,
-    onOpenChange: onEditOpenChange,
-  } = useDisclosure();
-  const {
-    isOpen: isDeleteOpen,
-    onOpenChange: onDeleteOpenChange,
-  } = useDisclosure();
+  const { isOpen: isEditOpen, onOpenChange: onEditOpenChange } = useDisclosure();
+  const { isOpen: isDeleteOpen, onOpenChange: onDeleteOpenChange } = useDisclosure();
 
   const [editData, setEditData] = useState({
     propertyType: "",
@@ -27,110 +21,102 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
     price: "",
     description: "",
     amenities: "",
-    status: "", // Ensure status is part of the state
+    status: "",
   });
 
+  // Fetch property details for editing
   const fetchPropertyDetails = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5176/api/Property/${propertyId}`
-      );
+      const response = await fetch(`http://localhost:5176/api/Property/${propertyId}`);
       if (!response.ok) throw new Error("Failed to fetch property details");
       const data = await response.json();
-      setEditData({
-        propertyType: data.propertyType || "",
-        location: data.location || "",
-        pincode: data.pincode || "",
-        price: data.price || "",
-        description: data.description || "",
-        amenities: data.amenities || "",
-        status: data.status || "", // Ensure fetched status is used
-      });
+      setEditData(data);
     } catch (error) {
       console.error("Error fetching property details:", error);
     }
   };
 
+  // Handle edit click
   const handleEditClick = async () => {
+    console.log("Editing property with ID:", propertyId);
     await fetchPropertyDetails();
-    onEditOpenChange(true); // Open the edit modal
+    onEditOpenChange(true);
   };
 
+  // Handle delete click
   const handleDeleteClick = () => {
-    onDeleteOpenChange(true); // Open the delete confirmation modal
+    console.log("Attempting to delete property with ID:", propertyId);
+    onDeleteOpenChange(true);
   };
 
+  // Confirm deletion
   const confirmDelete = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:5176/api/Property/${propertyId}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (!response.ok) throw new Error("Failed to delete the property");
+      const response = await fetch(`http://localhost:5176/api/Property/${propertyId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage || "Failed to delete the property");
+      }
+      console.log("Property deleted successfully.");
       onDelete(propertyId);
-      onDeleteOpenChange(false); // Close the delete modal
+      onDeleteOpenChange(false);
     } catch (error) {
       console.error("Error deleting property:", error);
+      alert(`Error: ${error.message}`);
     }
   };
 
+  // Handle saving edits
   const handleSaveEdit = async () => {
     const formDataToSend = new FormData();
-    for (const key in editData) {
-      if (editData[key] !== "") {
-        formDataToSend.append(
-          key.charAt(0).toUpperCase() + key.slice(1),
-          editData[key]
-        );
+    Object.entries(editData).forEach(([key, value]) => {
+      if (value) {
+        formDataToSend.append(key.charAt(0).toUpperCase() + key.slice(1), value);
       }
-    }
+    });
 
     try {
-      const response = await fetch(
-        `http://localhost:5176/api/Property/${propertyId}`,
-        {
-          method: "PATCH",
-          body: formDataToSend,
-        }
-      );
+      const response = await fetch(`http://localhost:5176/api/Property/${propertyId}`, {
+        method: "PATCH",
+        body: formDataToSend,
+      });
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to edit the property");
       }
 
+      console.log("Property edited successfully.");
       onEdit(propertyId, editData);
-      onEditOpenChange(false); // Close the edit modal
-      window.location.reload(); // Refresh the page
+      onEditOpenChange(false);
+      window.location.reload();
     } catch (error) {
       console.error("Error editing property:", error);
       alert("An error occurred while saving the property. Please try again.");
     }
   };
 
+  // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditData((prev) => ({ ...prev, [name]: value }));
   };
 
-
   return (
     <>
       <div className="flex justify-center">
-        {/* Edit Button */}
         <Button color="primary" onPress={handleEditClick} className="mr-2">
           Edit
         </Button>
 
-        {/* Delete Button */}
         <Button color="danger" onPress={handleDeleteClick} className="ml-2">
           Delete
         </Button>
       </div>
 
-      {/* Modal for editing */}
+      {/* Edit Modal */}
       <Modal isOpen={isEditOpen} onOpenChange={onEditOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -140,68 +126,52 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
                 <Input
                   name="location"
                   placeholder="Location"
-                  value={editData.location || ""}
+                  value={editData.location}
                   onChange={handleInputChange}
                   className="mb-2"
                 />
                 <Input
                   name="pincode"
                   placeholder="Pincode"
-                  value={editData.pincode || ""}
+                  value={editData.pincode}
                   onChange={handleInputChange}
                   className="mb-2"
                 />
                 <Input
                   name="price"
                   placeholder="Price"
-                  value={editData.price || ""}
+                  value={editData.price}
                   onChange={handleInputChange}
                   className="mb-2"
                 />
                 <Input
                   name="description"
                   placeholder="Description"
-                  value={editData.description || ""}
+                  value={editData.description}
                   onChange={handleInputChange}
                   className="mb-2"
                 />
-
               </ModalBody>
               <ModalFooter>
-                <div className="flex">
-                  <Button
-                    color="danger"
-                    variant="bordered"
-                    onPress={onClose}
-                    className="mr-1"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    color="primary"
-                    onPress={handleSaveEdit}
-                    className="ml-1"
-                  >
-                    Save
-                  </Button>
-                </div>
+                <Button color="danger" variant="bordered" onPress={onClose} className="mr-1">
+                  Cancel
+                </Button>
+                <Button color="primary" onPress={handleSaveEdit} >
+                  Save
+                </Button>
               </ModalFooter>
             </>
           )}
         </ModalContent>
       </Modal>
 
-      {/* Modal for delete confirmation */}
+      {/* Delete Modal */}
       <Modal isOpen={isDeleteOpen} onOpenChange={onDeleteOpenChange}>
         <ModalContent>
           <ModalHeader>Delete</ModalHeader>
           <ModalBody>Are you sure you want to delete this property?</ModalBody>
           <ModalFooter>
-            <Button
-              color="primary"
-              variant="bordered"
-              onPress={() => onDeleteOpenChange(false)}
-            >
+            <Button color="primary" variant="bordered" onPress={() => onDeleteOpenChange(false)}>
               Cancel
             </Button>
             <Button color="danger" variant="solid" onPress={confirmDelete}>

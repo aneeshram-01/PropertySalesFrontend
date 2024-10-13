@@ -273,31 +273,22 @@ import {
                     />
                   </div>
                 </div>
-                <Button
-                  type="submit"
-                  color="primary"
-                  css={{
-                    marginTop: "20px",
-                    width: "100%",
-                    height: "40px",
-                    borderRadius: "8px",
-                  }}
-                >
-                  Add Property
-                </Button>
                 {message && <p>{message}</p>}
               </form>
             </div>
           </ModalBody>
-          <ModalFooter css={{ justifyContent: "center" }}>
+          <ModalFooter css={{ justifyContent: "flex-end" }}> {/* Align buttons to the right */}
             <Button
               auto
-              color="error"
-              flat
+              color="danger"
+              variant="bordered"
               onClick={onClose}
-              css={{ marginTop: "10px", width: "100%", height: "40px" }}
+              css={{ marginRight: "10px", height: "40px" }} // Add margin for spacing
             >
               Close
+            </Button>
+            <Button auto color="primary" onClick={handleSubmit} css={{ height: "40px" }}>
+              Add Property
             </Button>
           </ModalFooter>
         </ModalContent>
