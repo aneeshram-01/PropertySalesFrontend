@@ -73,7 +73,7 @@ const DashNav = ({ open, handleDrawerOpen }) => {
             <AcmeLogo className="mr-2" />
           </a>
           <Typography variant="h6" noWrap component="div" sx={{ ml: 1 }}>
-            <a href="/">PropertySales</a>
+            <a href="/">Mercurial</a>
           </Typography>
         </Box>
         <Box sx={{ marginLeft: "auto", display: "flex", alignItems: "center" }}>

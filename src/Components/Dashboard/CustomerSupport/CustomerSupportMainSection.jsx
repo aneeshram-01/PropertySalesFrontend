@@ -32,7 +32,7 @@ const ContactUs = () => {
 
   return (
     <div className="p-14">
-      <Card className={`py-4 max-w-4xl mx-auto shadow-lg rounded-lg hover:shadow-lg hover:transform hover:scale-105 transition-all duration-300 border-2 ${theme === "dark" ? "border-gray-700" : "border-gray-300"}`}>
+      <Card className={`py-4 max-w-4xl mx-auto shadow-lg rounded-lg hover:shadow-lg hover:transform hover:scale-105 transition-all duration-300 border-2 ${theme === "dark" ? "border-gray-300" : "border-gray-700"}`}>
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
           <h2 className="text-2xl font-bold">Customer Support</h2>
           <small className="text-default-500">We’re here to help!</small>

@@ -8,13 +8,13 @@ import {
 } from "@nextui-org/react";
 import { AcmeLogo } from "./AcmeLogo.jsx";
 import { useTheme } from "next-themes";
-import { useLocation, useNavigate } from "react-router-dom"; // Import useLocation and useNavigate from react-router-dom
+// import { useLocation, useNavigate } from "react-router-dom"; // Import useLocation and useNavigate from react-router-dom
 
 
 export default function Navigationbar({ aboutRef }) {
   const { theme, setTheme } = useTheme();
-  const location = useLocation();
-  const navigate = useNavigate();
+  // const location = useLocation();
+  // const navigate = useNavigate();
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -27,7 +27,7 @@ export default function Navigationbar({ aboutRef }) {
           <AcmeLogo className="mr-2" />
         </a>
         <p className="font-bold text-inherit text-sm ">
-          <a href="/">PROPERTY SALES</a>
+          <a href="/">MERCURIAL</a>
         </p>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="end">

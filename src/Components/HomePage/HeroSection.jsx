@@ -21,16 +21,17 @@ export default function HeroSection() {
         {/* Text Block */}
         <div className={`flex flex-col items-center justify-center text-center space-y-4 ${theme === "dark" ? "text-white" : "text-black"} `}>
           <h1 className="text-5xl font-bold">
-            Welcome to ACME Property Sales
+            Welcome to Mercurial
           </h1>
           <p className="text-md max-w-xl whitespace-pre-wrap">
-            
-            Discover the best real estate properties with ACME. 
+            Discover the best real estate properties with Mercurial. 
             Whether you're looking to buy or sell, we are here to help you every step of the way.
-            
             Join Us!
-
           </p>
+          <h2 className="text-xl max-w-xl whitespace-pre-wrap font-bold">
+            A connection point for real estate needs.
+          </h2>
+         
         </div>
 
         {/* Map Section */}
@@ -39,7 +40,7 @@ export default function HeroSection() {
         </div>
 
         {/* Button */}
-        <div className="pb-5">
+        <div className="pb-10">
         <Button
           className="rounded-lg px-6 py-3 bg-primary transition-colors duration-300 hover:scale-105 mb-8  border-none relative"
           size="lg"

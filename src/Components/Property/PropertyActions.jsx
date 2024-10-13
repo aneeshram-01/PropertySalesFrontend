@@ -118,21 +118,16 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
 
   return (
     <>
-    <div className="flex justify-center">
-      {/* Edit Button */}
-      <Button color="primary" onPress={handleEditClick} className="mr-2" >
-        Edit
-      </Button>
+      <div className="flex justify-center">
+        {/* Edit Button */}
+        <Button color="primary" onPress={handleEditClick} className="mr-2">
+          Edit
+        </Button>
 
-      {/* Delete Button */}
-      <Button
-        color="danger"
-        onPress={handleDeleteClick}
-        className="ml-2"
-        
-      >
-        Delete
-      </Button>
+        {/* Delete Button */}
+        <Button color="danger" onPress={handleDeleteClick} className="ml-2">
+          Delete
+        </Button>
       </div>
       {/* Modal for editing */}
       <Modal isOpen={isEditOpen} onOpenChange={onEditOpenChange}>
@@ -141,14 +136,6 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
             <>
               <ModalHeader>Edit Property</ModalHeader>
               <ModalBody>
-                <input
-                  type="text"
-                  name="propertyType"
-                  placeholder="Property Type"
-                  value={editData.propertyType || ""}
-                  onChange={handleInputChange}
-                  className="w-full p-2 mb-2 border border-gray-300 rounded"
-                />
                 <input
                   type="text"
                   name="location"
@@ -180,16 +167,36 @@ export default function PropertyActions({ propertyId, onEdit, onDelete }) {
                   onChange={handleInputChange}
                   className="w-full p-2 mb-2 border border-gray-300 rounded"
                 />
+                <select
+                  name="status"
+                  value={editData.status || ""}
+                  onChange={handleInputChange}
+                  className="w-full p-2 mb-2 border border-gray-300 rounded"
+                >
+                  <option value="" disabled>
+                    Select Status
+                  </option>
+                  <option value={0}>Sale</option>
+                  <option value={1}>Rent</option>
+                </select>
               </ModalBody>
               <ModalFooter>
                 <div className="flex">
-                <Button color="danger" variant="bordered" onPress={onClose} className="mr-1">
+                  <Button
+                    color="danger"
+                    variant="bordered"
+                    onPress={onClose}
+                    className="mr-1"
+                  >
                     Cancel
                   </Button>
-                  <Button color="primary" onPress={handleSaveEdit} className="ml-1">
+                  <Button
+                    color="primary"
+                    onPress={handleSaveEdit}
+                    className="ml-1"
+                  >
                     Save
                   </Button>
-                  
                 </div>
               </ModalFooter>
             </>

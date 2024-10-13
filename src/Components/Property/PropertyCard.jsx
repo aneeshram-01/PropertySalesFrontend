@@ -78,7 +78,7 @@ export default function Admin() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+    <div className="container mx-auto pr-11 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
       {properties.length > 0 ? (
         properties.map(
           ({
@@ -98,8 +98,8 @@ export default function Admin() {
                 ${theme === "dark" ? "border-gray-700" : "border-gray-300"} 
                 ${
                   theme === "dark"
-                    ? "bg-gray-600 text-white"
-                    : "bg-blue-200 text-black"
+                    ? "bg-black text-white"
+                    : "bg-white text-black"
                 }`} // Dynamic styles
               bordered
               
