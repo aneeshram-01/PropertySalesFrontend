@@ -1,117 +1,123 @@
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Input,
-  Textarea,
-} from "@nextui-org/react";
-import React, { useState } from "react";
-
-export default function PropertyAdd({ isOpen, onClose }) {
-  const [propertyType, setPropertyType] = useState(0); // 0: Sale, 1: Rent
-  const [location, setLocation] = useState("");
-  const [pincode, setPincode] = useState("");
-  const [price, setPrice] = useState("");
-  const [description, setDescription] = useState("");
-  const [amenities, setAmenities] = useState("");
-  const [status, setStatus] = useState(0); // 0: Active, 1: Pending, 2: Sold, 3: Rented
-  const [aadhaarCard, setAadhaarCard] = useState("");
-  const [imageFiles, setImageFiles] = useState([]);
-  const [message, setMessage] = useState("");
-
-  const handleImageChange = (e) => {
-    setImageFiles(e.target.files);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-
-    formData.append("PropertyType", propertyType);
-    formData.append("Location", location);
-    formData.append("Pincode", pincode);
-    formData.append("Price", price);
-    formData.append("Description", description);
-    formData.append("Amenities", amenities);
-    formData.append("Status", status);
-    formData.append("AadhaarCard", aadhaarCard);
-
-    for (let i = 0; i < imageFiles.length; i++) {
-      formData.append("ImageFiles", imageFiles[i]);
-    }
-
-    try {
-      const response = await fetch("http://localhost:5176/api/Property/add", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to add property");
+    Modal,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    Button,
+    Input,
+    Textarea,
+    Dropdown,
+    DropdownTrigger,
+    DropdownMenu,
+    DropdownItem,
+  } from "@nextui-org/react";
+  import React, { useState } from "react";
+  
+  export default function PropertyAdd({ isOpen, onClose }) {
+    const [propertyType, setPropertyType] = useState(0); // 0: Sale, 1: Rent
+    const [location, setLocation] = useState("");
+    const [pincode, setPincode] = useState("");
+    const [price, setPrice] = useState("");
+    const [description, setDescription] = useState("");
+    const [amenities, setAmenities] = useState("");
+    const [status, setStatus] = useState(0); // 0: Active, 1: Pending, 2: Sold, 3: Rented
+    const [aadhaarCard, setAadhaarCard] = useState("");
+    const [imageFiles, setImageFiles] = useState([]);
+    const [message, setMessage] = useState("");
+  
+    const handleImageChange = (e) => {
+      setImageFiles(e.target.files);
+    };
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+  
+      formData.append("PropertyType", propertyType);
+      formData.append("Location", location);
+      formData.append("Pincode", pincode);
+      formData.append("Price", price);
+      formData.append("Description", description);
+      formData.append("Amenities", amenities);
+      formData.append("Status", status);
+      formData.append("AadhaarCard", aadhaarCard);
+  
+      for (let i = 0; i < imageFiles.length; i++) {
+        formData.append("ImageFiles", imageFiles[i]);
       }
-
-      const result = await response.json();
-      setMessage("Property added successfully! ID: " + result.propertyId);
-      resetForm();
-      onClose(); // Close the modal after successful addition
-      window.location.reload(); // Refresh the page
-    } catch (error) {
-      setMessage("Error: " + error.message);
-    }
-  };
-
-  const resetForm = () => {
-    setPropertyType(0);
-    setLocation("");
-    setPincode("");
-    setPrice("");
-    setDescription("");
-    setAmenities("");
-    setStatus(0);
-    setAadhaarCard("");
-    setImageFiles([]);
-  };
-
-  return (
-    
-        <Modal
-      isOpen={isOpen}
-      onOpenChange={onClose}
-      placement="center"
-      css={{
-        zIndex: 2000,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "200vh",
-        marginTop: "0px",
-      }}
-    >
-      <ModalContent
+  
+      try {
+        const response = await fetch("http://localhost:5176/api/Property/add", {
+          method: "POST",
+          body: formData,
+        });
+  
+        if (!response.ok) {
+          throw new Error("Failed to add property");
+        }
+  
+        const result = await response.json();
+        setMessage("Property added successfully! ID: " + result.propertyId);
+        resetForm();
+        onClose(); // Close the modal after successful addition
+        window.location.reload(); // Refresh the page
+      } catch (error) {
+        setMessage("Error: " + error.message);
+      }
+    };
+  
+    const resetForm = () => {
+      setPropertyType(0);
+      setLocation("");
+      setPincode("");
+      setPrice("");
+      setDescription("");
+      setAmenities("");
+      setStatus(0);
+      setAadhaarCard("");
+      setImageFiles([]);
+    };
+  
+    return (
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onClose}
+        placement="center"
         css={{
-          maxWidth: "900px", // Increased width for better layout
-          width: "90%",
-          margin: "0 auto",
-          padding: "10px",
+          zIndex: 2000,
           display: "flex",
-          flexDirection: "column",
           justifyContent: "center",
-          zIndex: 9999,
-          position: "relative",
-          top: "50px",
+          alignItems: "center",
+          height: "200vh",
+          marginTop: "0px",
         }}
       >
-        <ModalHeader
-          css={{ marginBottom: "5px", marginTop: "10px", textAlign: "center" }}
+        <ModalContent
+          css={{
+            maxWidth: "900px", // Increased width for better layout
+            width: "90%",
+            margin: "0 auto",
+            padding: "10px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            zIndex: 9999,
+            position: "relative",
+            top: "50px",
+          }}
         >
-          Add Property
-        </ModalHeader>
-        <ModalBody css={{ marginBottom: "5px", // Reduced margin at the bottom
-    paddingTop:"20px"}}>
-          
+          <ModalHeader
+            css={{ marginBottom: "5px", marginTop: "10px", textAlign: "center" }}
+          >
+            Add Property
+          </ModalHeader>
+          <ModalBody
+            css={{
+              marginBottom: "5px", // Reduced margin at the bottom
+              paddingTop: "20px",
+            }}
+          >
             <div
               style={{
                 display: "flex",
@@ -124,15 +130,36 @@ export default function PropertyAdd({ isOpen, onClose }) {
                 <div
                   style={{ display: "flex", gap: "15px", marginBottom: "10px" }}
                 >
-                  <Input
-                    label="Property Type"
-                    placeholder="Enter Sale (0) or Rent (1)"
-                    value={propertyType}
-                    onChange={(e) => setPropertyType(Number(e.target.value))}
-                    variant="bordered"
-                    required
-                    css={{ flex: "1 1 30%" }} // Flex for 3-column layout
-                  />
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button
+                        variant="bordered"
+                        css={{
+                          flex: "1 1 30%",
+                          padding: "10px",
+                          borderRadius: "8px",
+                          height: "40px", // Set height to match other inputs
+                        }}
+                      >
+                        {propertyType === 0 ? "Sale" : propertyType === 1 ? "Rent" : "Select Property Type"}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      aria-label="Select Property Type"
+                      onSelectionChange={(selected) => setPropertyType(Number(selected))}
+                    >
+                      <DropdownItem key="disabled" isDisabled>
+                        Select Property Type
+                      </DropdownItem>
+                      <DropdownItem key="sale" value={0}>
+                        Sale
+                      </DropdownItem>
+                      <DropdownItem key="rent" value={1}>
+                        Rent
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+  
                   <Input
                     label="Location"
                     placeholder="Enter the location"
@@ -155,15 +182,42 @@ export default function PropertyAdd({ isOpen, onClose }) {
                 <div
                   style={{ display: "flex", gap: "15px", marginBottom: "10px" }}
                 >
-                  <Input
-                    label="Status"
-                    placeholder="Enter status (0: Active, 1: Pending, 2: Sold, 3: Rented)"
-                    value={status}
-                    onChange={(e) => setStatus(Number(e.target.value))}
-                    variant="bordered"
-                    required
-                    css={{ flex: "1 1 30%" }} // Flex for 3-column layout
-                  />
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button
+                        variant="bordered"
+                        css={{
+                          flex: "1 1 30%",
+                          padding: "10px",
+                          borderRadius: "8px",
+                          height: "40px", // Set height to match other inputs
+                        }}
+                      >
+                        {status === 0 ? "Active" : status === 1 ? "Pending" : status === 2 ? "Sold" : status === 3 ? "Rented" : "Select Status"}
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      aria-label="Select Status"
+                      onSelectionChange={(selected) => setStatus(Number(selected))}
+                    >
+                      <DropdownItem key="disabled" isDisabled>
+                        Select Status
+                      </DropdownItem>
+                      <DropdownItem key="active" value={0}>
+                        Active
+                      </DropdownItem>
+                      <DropdownItem key="pending" value={1}>
+                        Pending
+                      </DropdownItem>
+                      <DropdownItem key="sold" value={2}>
+                        Sold
+                      </DropdownItem>
+                      <DropdownItem key="rented" value={3}>
+                        Rented
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+  
                   <Input
                     label="Pincode"
                     placeholder="Enter the pincode"
@@ -175,7 +229,7 @@ export default function PropertyAdd({ isOpen, onClose }) {
                   />
                   <Input
                     label="Aadhaar Card"
-                    placeholder="Enter Aadhaar number"
+                    placeholder="Enter Aadhaar no."
                     value={aadhaarCard}
                     onChange={(e) => setAadhaarCard(e.target.value)}
                     variant="bordered"
@@ -183,7 +237,7 @@ export default function PropertyAdd({ isOpen, onClose }) {
                     css={{ flex: "1 1 30%" }} // Flex for 3-column layout
                   />
                 </div>
-
+  
                 {/* Row 2 */}
                 <div
                   style={{ display: "flex", gap: "15px", marginBottom: "10px" }}
@@ -231,23 +285,21 @@ export default function PropertyAdd({ isOpen, onClose }) {
                 </div>
               </form>
             </div>
-
-          {message && <div className="text-green-500">{message}</div>}
-        </ModalBody>
-        <ModalFooter
-          css={{ justifyContent: "space-between", marginTop: "5px" }}
-        >
-          <Button color="primary" type="submit" onClick={handleSubmit}>
-            Add Property
-          </Button>
-          <Button color="danger" variant="bordered" onPress={onClose}>
-            Close
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-
-        
-    
-  );
-}
+  
+            {message && <div className="text-green-500">{message}</div>}
+          </ModalBody>
+          <ModalFooter
+            css={{ justifyContent: "space-between", marginTop: "5px" }}
+          >
+            <Button color="primary" type="submit" onClick={handleSubmit}>
+              Add Property
+            </Button>
+            <Button color="danger" variant="bordered" onPress={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    );
+  }
+  
